@@ -10,7 +10,14 @@ import TableSet from "./inputs/tableSet";
 
 import SideBar from "./sidebar";
 
-import { chartSetSymbol, chartSetInputs } from "../actions/chartActions";
+import {
+  chartSetSymbol,
+  chartSetFrequency,
+  chartSetShowRecords,
+  chartSetInputs,
+  chartForward,
+  chartBackward,
+} from "../actions/chartActions";
 
 const now = new Date();
 
@@ -23,7 +30,7 @@ function ChartInputs(props) {
 
   const inputs = useRef({
     date: "",
-    freq: "",
+    freq: "d",
     book: "",
   });
 
@@ -79,15 +86,19 @@ function ChartInputs(props) {
       newIndex = 0;
     }
 
+    const items = Object.values(props.symbols)[newIndex];
+
+    props.chartSetSymbol(items[0]);
+
     setState({
       ...state,
       selectedItemIndex: 0,
       currentSetIndex: newIndex,
-      currentSetItems: Object.values(props.symbols)[newIndex],
+      currentSetItems: items,
     });
   }
 
-  function setSelectedIndex(index) {
+  function setSelectedItemIndex(index) {
     if (index < 0 || index >= state.currentSetItems.length) {
       return;
     }
@@ -113,15 +124,7 @@ function ChartInputs(props) {
       return;
     }
 
-    if (
-      //variables.current.focused.symbol ||
-      //variables.current.focused.date ||
-      //variables.current.focused.freq ||
-      //variables.current.focused.book
-      focused.current.date ||
-      focused.current.freq ||
-      focused.current.book
-    ) {
+    if (focused.current.date || focused.current.freq || focused.current.book) {
       return;
     }
 
@@ -132,39 +135,32 @@ function ChartInputs(props) {
 
       let index;
       if (e.which === 38) {
-        // index = state.selectedItemIndex - 1;
         index = state.selectedItemIndex - 1;
         if (index < 0) {
-          // index = state.symbols.length - 1;
           index = state.currentSetItems.length - 1;
         }
       } else if (e.which === 40) {
         index = state.selectedItemIndex + 1;
-        //index = selectedItemIndex + 1;
         if (index > state.currentSetItems.length - 1) {
           index = 0;
         }
       }
 
-      setSelectedIndex(index);
+      setSelectedItemIndex(index);
     } else {
       if (e.which === 37) {
-        //backward();
+        props.chartBackward();
       } else if (e.which === 39) {
-        //forward();
+        props.chartForward();
       } else if (e.which >= 48 && e.which <= 57) {
         // number keys 48: 0, 49-57 : 1-9
-        //variables.current.key += (e.which - 48).toString();
         keyStroke.current += (e.which - 48).toString();
 
         setTimeout(() => {
-          //if (variables.current.key !== "") {
           if (keyStroke.current !== "") {
-            //setSelectedIndex(parseInt(variables.current.key) - 1);
-            setSelectedIndex(parseInt(keyStroke.current) - 1);
+            setSelectedItemIndex(parseInt(keyStroke.current) - 1);
           }
 
-          //variables.current.key = "";
           keyStroke.current = "";
         }, 250);
       } else {
@@ -172,39 +168,27 @@ function ChartInputs(props) {
         switch (e.which) {
           case 72:
             // h
-            //freqRequest("h");
-            //setFrequency("h", true);
-            // chartRequest();
+            //props.chartSetFrequency("h");
             break;
           case 68:
             // d
-            // freqRequest("d");
-            //setFrequency("d", true);
-            // chartRequest();
+            inputs.current.freq = "d";
+            props.chartSetFrequency("d");
             break;
           case 87:
             // w
-            // freqRequest("w");
-            //setFrequency("w", true);
-            // chartRequest();
+            inputs.current.freq = "w";
+            props.chartSetFrequency("w");
             break;
           case 77:
             // m
-            //freqRequest("m");
-            //setFrequency("m", true);
-            // chartRequest();
+            props.chartSetFrequency("m");
             break;
           case 13:
             // enter
-            //toggleFullScreen();
             break;
           case 32:
             // space
-            //if (_modal.isOpen) {
-            //_modal.close();
-            //} else {
-            //_modal.open();
-            //}
             break;
           default:
             break;
@@ -212,11 +196,6 @@ function ChartInputs(props) {
       }
     }
   }
-
-  useEffect(() => {
-    window.addEventListener("keydown", keydownHandler);
-    return () => window.removeEventListener("keydown", keydownHandler);
-  });
 
   useEffect(() => {
     props.chartSetInputs(
@@ -227,7 +206,12 @@ function ChartInputs(props) {
     );
   }, []);
 
-  console.log("chart inputs");
+  useEffect(() => {
+    console.log("chart inputs");
+
+    window.addEventListener("keydown", keydownHandler);
+    return () => window.removeEventListener("keydown", keydownHandler);
+  }, [state]);
 
   return (
     <SideBar>
@@ -238,7 +222,7 @@ function ChartInputs(props) {
         selected={state.selectedItemIndex}
         onChangeSet={changeSet}
         onSelect={(index) => {
-          setSelectedIndex(index);
+          setSelectedItemIndex(index);
         }}
         showNumber
       />
@@ -267,7 +251,7 @@ function ChartInputs(props) {
       <LabelInput
         label="Frequency"
         regex="^[dw]{1}$"
-        value="d"
+        value={inputs.current.freq}
         onFocus={() => (focused.current.freq = true)}
         onBlur={() => (focused.current.freq = false)}
         onKeyDown={() => {}}
@@ -294,7 +278,14 @@ function ChartInputs(props) {
         }}
       />
 
-      <CheckButton> show records </CheckButton>
+      <CheckButton
+        onCheck={(active) => {
+          props.chartSetShowRecords(active);
+        }}
+      >
+        {" "}
+        show records{" "}
+      </CheckButton>
 
       <Separator />
 
@@ -327,7 +318,11 @@ const mapStatetoProps = (state) => ({
   chart: state.chart,
 });
 
-//export default ChartInputs;
-export default connect(mapStatetoProps, { chartSetSymbol, chartSetInputs })(
-  ChartInputs
-);
+export default connect(mapStatetoProps, {
+  chartSetSymbol,
+  chartSetFrequency,
+  chartSetShowRecords,
+  chartSetInputs,
+  chartForward,
+  chartBackward,
+})(ChartInputs);

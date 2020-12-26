@@ -100,7 +100,7 @@ const initialState = {
   ],
 };
 
-export default function (state = initialState, action) {
+export default function symbolsReducer(state = initialState, action) {
   switch (action.type) {
     default:
       return state;

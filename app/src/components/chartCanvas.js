@@ -1,24 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { connect } from "react-redux";
-import { chartRequest } from "../actions/chartActions";
+import {
+  chartImageRequest,
+  chartInspectRequest,
+  chartSetInspect,
+} from "../actions/chartActions";
 
 import styled from "styled-components";
 
 import { fontSubhead, fontBody1 } from "../styles/typography";
-import { layout, layoutFlex10 } from "../styles/layout";
+import { layout } from "../styles/layout";
 import { noselect, willChange, transitionLiteral } from "../styles/common";
 
-const Container = styled.div`
-  ${layoutFlex10}
-`;
+const Container = styled.div``;
 
 const ChartContainer = styled.div`
   ${layout}
   ${noselect}
   ${willChange("opacity", "0.075s")}
-
-  color: red;
 `;
 
 const ChartInfo = styled.div`
@@ -28,17 +28,17 @@ const ChartInfo = styled.div`
   }
 
   ${noselect}
-
   ${transitionLiteral("top 0.1s ease, left 0.1s ease")}
 
-  display: ${(props) => (props.isMoving ? "block" : "none")};
+  display: ${(props) => (props.active ? "block" : "none")};
 
   white-space: pre;
   position: absolute;
+  left: 29%;
   z-index: 2;
   color: white;
   opacity: var(--dark-primary-opacity);
-  background-color: rgba(255, 255, 255, 0);
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const ChartCover = styled.canvas`
@@ -50,7 +50,7 @@ const ChartCover = styled.canvas`
 `;
 
 const ChartImage = styled.img`
-  max-width: 100%;
+  max-width: 99%;
   max-height: 100%;
 `;
 
@@ -59,10 +59,8 @@ const inspectColor = "rgba(255, 255, 255, 0.8)";
 const anchorColor = "rgba(255, 255, 255, 0.5)";
 
 function ChartCanvas(props) {
-  //const { inspectRequest, imageSrc } = useContext(ChartContext);
-
   const [state, setState] = useState({
-    isMoving: false,
+    showInfo: false,
   });
 
   const infoRef = useRef(null);
@@ -83,15 +81,6 @@ function ChartCanvas(props) {
     anchorX: 0,
     anchorY: 0,
   });
-
-  //const variables = useRef({
-  //left: false,
-  //right: false,
-  //both: false,
-  //calc: false,
-  //calcX: 0,
-  //calcY: 0,
-  //});
 
   function eventXOffset(e) {
     return e.clientX - imageRef.current.offsetLeft;
@@ -144,9 +133,6 @@ function ChartCanvas(props) {
     cctx.clearRect(0, 0, coverRef.current.width, coverRef.current.height);
     cctx.fillStyle = coverColor;
 
-    //if (eventXOffset(e) >= variables.current.calcX) {
-    //cctx.fillRect(0, 0, variables.current.calcX, coverRef.current.height);
-
     if (eventXOffset(e) >= drawAnchor.current.anchorX) {
       cctx.fillRect(0, 0, drawAnchor.current.anchorX, coverRef.current.height);
 
@@ -160,10 +146,8 @@ function ChartCanvas(props) {
       cctx.fillRect(0, 0, eventXOffset(e), coverRef.current.height);
 
       cctx.fillRect(
-        //variables.current.calcX,
         drawAnchor.current.anchorX,
         0,
-        //coverRef.current.width - variables.current.calcX,
         coverRef.current.width - drawAnchor.current.anchorX,
         coverRef.current.height
       );
@@ -171,6 +155,8 @@ function ChartCanvas(props) {
   }
 
   function inspectInfo(e) {
+    props.chartSetInspect();
+
     const x = Math.max(
       Math.min(eventXOffset(e) / inspectRef.current.width, 1),
       0
@@ -185,17 +171,14 @@ function ChartCanvas(props) {
       0
     );
 
-    //if (variables.current.calc) {
     if (drawAnchor.current.active) {
       const ax = Math.max(
-        //Math.min(variables.current.calcX / inspectRef.current.width, 1),
         Math.min(drawAnchor.current.anchorX / inspectRef.current.width, 1),
         0
       );
 
       const ay = Math.max(
         Math.min(
-          //(inspectRef.current.height - variables.current.calcY) /
           (inspectRef.current.height - drawAnchor.current.anchorY) /
             inspectRef.current.height,
           1
@@ -203,44 +186,44 @@ function ChartCanvas(props) {
         0
       );
 
-      //inspectRequest(
-      //(data) => {
-      //infoRef.current.innerHTML = data;
-      //},
-      //x,
-      //y,
-      //ax,
-      //ay
-      //);
+      props.chartInspectRequest(
+        (data) => {
+          infoRef.current.innerHTML = data;
+        },
+        x,
+        y,
+        ax,
+        ay
+      );
     } else {
-      //inspectRequest(
-      //(data) => {
-      //infoRef.current.innerHTML = data;
-      //},
-      //x,
-      //y
-      //);
+      props.chartInspectRequest(
+        (data) => {
+          infoRef.current.innerHTML = data;
+        },
+        x,
+        y
+      );
     }
 
-    const offset = 20;
+    //const offset = 20;
 
-    let l;
-    if (eventXOffset(e) > inspectRef.current.width / 2) {
-      l = `${e.clientX - infoRef.current.clientWidth - offset}px`;
-    } else {
-      l = `${e.clientX + offset}px`;
-    }
+    //let l;
+    //if (eventXOffset(e) > inspectRef.current.width / 2) {
+    //  l = `${e.clientX - infoRef.current.clientWidth - offset}px`;
+    //} else {
+    //  l = `${e.clientX + offset}px`;
+    //}
 
-    infoRef.current.style.left = l;
+    //infoRef.current.style.left = l;
 
-    let t;
-    if (eventYOffset(e) > inspectRef.current.height / 2) {
-      t = `${e.clientY - infoRef.current.offsetHeight - offset}px`;
-    } else {
-      t = `${e.clientY + offset}px`;
-    }
+    //let t;
+    //if (eventYOffset(e) > inspectRef.current.height / 2) {
+    //  t = `${e.clientY - infoRef.current.offsetHeight - offset}px`;
+    //} else {
+    //  t = `${e.clientY + offset}px`;
+    //}
 
-    infoRef.current.style.top = t;
+    //infoRef.current.style.top = t;
   }
 
   function inspect(e) {
@@ -273,10 +256,8 @@ function ChartCanvas(props) {
     ictx.strokeStyle = anchorColor;
 
     ictx.beginPath();
-    //ictx.moveTo(variables.current.calcX, 0);
     ictx.moveTo(drawAnchor.current.anchorX, 0);
 
-    //ictx.lineTo(variables.current.calcX, inspectRef.current.height);
     ictx.lineTo(drawAnchor.current.anchorX, inspectRef.current.height);
 
     ictx.stroke();
@@ -284,10 +265,8 @@ function ChartCanvas(props) {
 
     ictx.beginPath();
 
-    //ictx.moveTo(0, variables.current.calcY);
     ictx.moveTo(0, drawAnchor.current.anchorY);
 
-    //ictx.lineTo(inspectRef.current.width, variables.current.calcY);
     ictx.lineTo(inspectRef.current.width, drawAnchor.current.anchorY);
 
     ictx.stroke();
@@ -295,11 +274,6 @@ function ChartCanvas(props) {
   }
 
   function handlerUp() {
-    //variables.current.left = false;
-    //variables.current.right = false;
-    //variables.current.both = false;
-    //variables.current.calc = false;
-
     drawCover.current.left = false;
     drawCover.current.right = false;
     drawCover.current.both = false;
@@ -308,19 +282,11 @@ function ChartCanvas(props) {
   }
 
   function handlerMove(e) {
-    if (!state.isMoving) {
-      setState({ ...state, isMoving: true });
+    if (!state.showInfo) {
+      setState({ ...state, showInfo: true });
     }
 
     inspectInfo(e);
-
-    //if (variables.current.both) {
-    //doubleCover(e);
-    //} else if (variables.current.left) {
-    //singleCoverL(e);
-    //} else if (variables.current.right) {
-    //singleCoverR(e);
-    //}
 
     if (drawCover.current.both) {
       doubleCover(e);
@@ -331,10 +297,6 @@ function ChartCanvas(props) {
     }
 
     inspect(e);
-
-    //if (variables.current.calc) {
-    //calcAnchor(e);
-    //}
 
     if (drawAnchor.current.active) {
       calcAnchor(e);
@@ -348,40 +310,33 @@ function ChartCanvas(props) {
     ictx.clearRect(0, 0, inspectRef.current.width, inspectRef.current.height);
     cctx.clearRect(0, 0, inspectRef.current.width, inspectRef.current.height);
 
-    //variables.current.left = false;
-    //variables.current.right = false;
-    //variables.current.both = false;
-
     drawCover.current.left = false;
     drawCover.current.right = false;
     drawCover.current.both = false;
 
     if (e.ctrlKey) {
-      //variables.current.left = true;
       drawCover.current.left = true;
     } else if (e.shiftKey) {
-      //variables.current.right = true;
       drawCover.current.right = true;
     } else if (e.altKey) {
-      //variables.current.both = true;
       drawCover.current.both = true;
     }
-
-    //variables.current.calc = true;
-    //variables.current.calcX = eventXOffset(e);
-    //variables.current.calcY = eventYOffset(e);
 
     drawAnchor.current.active = true;
     drawAnchor.current.anchorX = eventXOffset(e);
     drawAnchor.current.anchorY = eventYOffset(e);
 
-    setState({
-      ...state,
-      isMoving: false,
-    });
+    if (state.showInfo) {
+      setState({
+        ...state,
+        showInfo: false,
+      });
+    }
   }
 
   useEffect(() => {
+    console.log("chart image reload");
+
     const imgLoaded = () => {
       initCanvasSize();
     };
@@ -404,35 +359,30 @@ function ChartCanvas(props) {
       window.removeEventListener("mousemove", handlerMove);
       window.removeEventListener("mousedown", handlerDown);
     };
-  });
+  }, [state.showInfo]);
 
   useEffect(() => {
     console.log("useEffect chart request");
-    props.chartRequest();
+    props.chartImageRequest();
   }, [
-    props.chart.func,
+    props.chart.function,
     props.chart.symbol,
     props.chart.date,
-    props.chart.freq,
+    props.chart.frequency,
     props.chart.book,
-    props.chart.records,
-    props.chart.x,
-    props.chart.y,
-    props.chart.ax,
-    props.chart.ay,
+    props.chart.showRecords,
     props.chart.parameters,
+    props.chart.timestamp,
   ]);
 
   return (
     <>
-      <ChartInfo ref={infoRef} isMoving={state.isMoving}>
-        tsetsetsetsetsettstset
-      </ChartInfo>
       <Container>
+        <ChartInfo ref={infoRef} active={state.showInfo}></ChartInfo>
         <ChartContainer>
           <ChartCover ref={inspectRef} />
           <ChartCover ref={coverRef} />
-          <ChartImage ref={imageRef} src="test.jpg" />
+          <ChartImage ref={imageRef} src={props.chart.image} />
         </ChartContainer>
       </Container>
     </>
@@ -444,5 +394,8 @@ const mapStatetoProps = (state) => ({
   chart: state.chart,
 });
 
-//export default ChartCanvas;
-export default connect(mapStatetoProps, { chartRequest })(ChartCanvas);
+export default connect(mapStatetoProps, {
+  chartImageRequest,
+  chartInspectRequest,
+  chartSetInspect,
+})(ChartCanvas);

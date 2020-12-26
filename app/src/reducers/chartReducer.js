@@ -9,32 +9,37 @@ import {
   CHART_RANDOM_DATE_REQUEST,
   CHART_PARAMETERS_REQUEST,
   CHART_INSPECT_REQUEST,
+  CHART_SET_CHART_DATA,
 } from "../actions/chartActions";
 
 const initialState = {
   image: "",
   quote: {},
 
-  //url: "",
-
   isWorking: false,
 
-  func: "",
+  function: "",
   symbol: "",
   date: "",
-  freq: "",
+  frequency: "",
   book: "",
-  records: false,
+  showRecords: false,
 
-  x: null,
-  y: null,
-  ax: null,
-  ay: null,
+  parameters: {
+    Preset: "KushamiNeko",
+    CandleSticks: "true",
+    MovingAverages: "true",
+    MovingAverages100: "true",
+    MovingAverages300: "true",
+  },
 
-  parameters: {},
+  timestamp: 0,
 };
 
-export default function (state = initialState, action) {
+export default function chartReducer(state = initialState, action) {
+  const now = new Date();
+  const timestamp = Math.round(now.getTime() / 1000);
+
   switch (action.type) {
     case CHART_START_WORKING:
       return {
@@ -51,61 +56,73 @@ export default function (state = initialState, action) {
     case CHART_SET_FUNCTION:
       return {
         ...state,
-        func: action.payload.func,
+        function: action.payload.function,
+        timestamp: timestamp,
       };
 
     case CHART_SYMBOL_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
+        function: action.payload.function,
         symbol: action.payload.symbol,
+        timestamp: timestamp,
       };
 
     case CHART_FREQUENCY_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
-        freq: action.payload.freq,
+        function: action.payload.function,
+        frequency: action.payload.frequency,
+        timestamp: timestamp,
       };
 
     case CHART_INPUTS_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
+        function: action.payload.function,
         symbol: action.payload.symbol,
         date: action.payload.date,
-        freq: action.payload.freq,
+        frequency: action.payload.frequency,
         book: action.payload.book,
+        timestamp: timestamp,
       };
 
     case CHART_RECORDS_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
-        records: action.payload.records,
+        function: action.payload.function,
+        showRecords: action.payload.showRecords,
+        timestamp: timestamp,
       };
 
     case CHART_RANDOM_DATE_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
+        function: action.payload.function,
+        timestamp: timestamp,
       };
 
     case CHART_PARAMETERS_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
-        parameters: action.payload.params,
+        function: action.payload.function,
+        parameters: action.payload.parameters,
+        timestamp: timestamp,
       };
 
     case CHART_INSPECT_REQUEST:
       return {
         ...state,
-        func: action.payload.func,
-        x: action.payload.x,
-        y: action.payload.y,
-        ax: action.payload.ax,
-        ay: action.payload.ay,
+        function: action.payload.function,
+        timestamp: timestamp,
+      };
+
+    case CHART_SET_CHART_DATA:
+      return {
+        ...state,
+        image: action.payload.image,
+        quote: action.payload.quote,
+        isWorking: false,
       };
 
     default:

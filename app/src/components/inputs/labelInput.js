@@ -53,7 +53,7 @@ function LabelInput(props) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log("input effect");
+    console.log("init input effect");
     checkError(props.value);
   }, []);
 
@@ -82,11 +82,6 @@ function LabelInput(props) {
     }
   }
 
-  function onChange(e) {
-    checkError(e.target.value);
-    setValue(e.target.value);
-  }
-
   return (
     <Container>
       <Label>{props.label}</Label>
@@ -95,7 +90,10 @@ function LabelInput(props) {
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         onKeyDown={props.onKeyDown}
-        onChange={onChange}
+        onChange={(e) => {
+          checkError(e.target.value);
+          setValue(e.target.value);
+        }}
         error={error}
       />
     </Container>

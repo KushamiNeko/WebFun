@@ -1,13 +1,7 @@
 import styled from "styled-components";
-import {
-  layoutFlex2,
-  layoutVertical,
-  layoutAroundJustified,
-} from "../styles/layout";
+import { layoutVertical, layoutAroundJustified } from "../styles/layout";
 
-const Bar = styled.div`
-  ${layoutFlex2}
-`;
+const Bar = styled.div``;
 
 const Container = styled.div`
   ${layoutVertical}

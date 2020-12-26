@@ -9,6 +9,9 @@ import ChartInputs from "../components/chartInputs";
 import ChartCanvas from "../components/chartCanvas";
 import Modal from "../components/modal";
 
+import ChartParameters from "../components/chartParameters";
+import ChartRange from "../components/chartRange";
+
 //import { ChartProvider } from "../../context/chart";
 
 const Container = styled.div`
@@ -25,7 +28,10 @@ function PracticeView() {
         <ChartInputs />
         <ChartCanvas />
       </Container>
-      <Modal />
+      <Modal>
+        <ChartParameters />
+        <ChartRange />
+      </Modal>
     </>
     //<div className={styles.content}>
     //<ChartProvider>

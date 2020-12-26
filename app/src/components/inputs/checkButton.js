@@ -1,10 +1,5 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { fontButton } from "../../styles/typography";
-import { willChange } from "../../styles/common";
-import { horizontalMargin, borderOutline } from "./common";
-
 import Button from "./button";
 
 const ActivateButton = styled(Button)`
@@ -27,14 +22,21 @@ const ActivateButton = styled(Button)`
 function CheckButton(props) {
   const [checked, setChecked] = useState(false);
 
+  useEffect(() => {
+    const checked = props.checked ?? false;
+
+    setChecked(checked);
+  }, [props.checked]);
+
   return (
     <ActivateButton
       activated={checked}
-      onClick={(e) => {
-        setChecked(!checked);
-        if (props.onClick) {
-          props.onClick(e);
+      onClick={() => {
+        if (props.onCheck) {
+          props.onCheck(!checked);
         }
+
+        setChecked(!checked);
       }}
     >
       {props.children}
