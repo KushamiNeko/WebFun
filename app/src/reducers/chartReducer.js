@@ -2,6 +2,7 @@ import {
   CHART_START_WORKING,
   CHART_FINISH_WORKING,
   CHART_SET_FUNCTION,
+  CHART_REFRESH,
   CHART_SYMBOL_REQUEST,
   CHART_FREQUENCY_REQUEST,
   CHART_RECORDS_REQUEST,
@@ -51,6 +52,13 @@ export default function chartReducer(state = initialState, action) {
       return {
         ...state,
         isWorking: false,
+      };
+
+    case CHART_REFRESH:
+      return {
+        ...state,
+        function: "simple",
+        timestamp: timestamp,
       };
 
     case CHART_SET_FUNCTION:

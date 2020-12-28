@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { chartSetParameters } from "../actions/chartActions";
 
-import { layoutVertical, layoutAroundJustified } from "../styles/layout";
+import { layoutVertical } from "../styles/layout";
 
 import Title from "./inputs/title";
 import Button from "./inputs/button";
@@ -14,7 +14,6 @@ import Separator from "./inputs/separator";
 
 const Container = styled.div`
   ${layoutVertical}
-  ${layoutAroundJustified}
 
   min-width: 212px;
 `;
@@ -63,6 +62,10 @@ function ChartParameters(props) {
       <Separator />
       <Button
         onClick={() => {
+          if (props.chart.isWorking) {
+            return;
+          }
+
           const keys = Object.keys(props.parameters);
 
           let newIndex = (state.presetIndex += 1);
@@ -86,6 +89,10 @@ function ChartParameters(props) {
         <CheckButton
           key={index}
           onCheck={(checked) => {
+            if (props.chart.isWorking) {
+              return;
+            }
+
             if (checked) {
               if (!state.checkedParametersIndex.includes(index)) {
                 setState({

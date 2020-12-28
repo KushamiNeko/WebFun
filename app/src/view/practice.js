@@ -1,6 +1,4 @@
-//import React from "react";
-//import ChartInputs from "../../components/chart_inputs/chart_input";
-//import Canvas from "../../components/canvas/canvas";
+import { connect } from "react-redux";
 
 import styled from "styled-components";
 import { layoutHorizontal } from "../styles/layout";
@@ -12,14 +10,14 @@ import Modal from "../components/modal";
 import ChartParameters from "../components/chartParameters";
 import ChartRange from "../components/chartRange";
 
-//import { ChartProvider } from "../../context/chart";
+import TradeInputs from "../components/tradeInputs";
 
 const Container = styled.div`
   ${layoutHorizontal}
   height: 97%;
 `;
 
-function PracticeView() {
+function PracticeView(props) {
   console.log("practice");
 
   return (
@@ -28,17 +26,17 @@ function PracticeView() {
         <ChartInputs />
         <ChartCanvas />
       </Container>
-      <Modal>
-        <ChartParameters />
+      <Modal isOpen={props.trade.showPanel}>
+        <TradeInputs />
         <ChartRange />
+        <ChartParameters />
       </Modal>
     </>
-    //<div className={styles.content}>
-    //<ChartProvider>
-    //<Canvas />
-    //</ChartProvider>
-    //</div>
   );
 }
 
-export default PracticeView;
+const mapStatetoProps = (state) => ({
+  trade: state.trade,
+});
+
+export default connect(mapStatetoProps, {})(PracticeView);

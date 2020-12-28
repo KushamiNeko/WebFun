@@ -17,9 +17,10 @@ import {
   chartSetInputs,
   chartForward,
   chartBackward,
+  chartRandomDate,
 } from "../actions/chartActions";
 
-const now = new Date();
+import { tradeShowPanel } from "../actions/tradeActions";
 
 function ChartInputs(props) {
   const [state, setState] = useState({
@@ -28,10 +29,10 @@ function ChartInputs(props) {
     selectedItemIndex: 0,
   });
 
-  const inputs = useRef({
+  const [inputs, setInputs] = useState({
     date: "",
     freq: "d",
-    book: "",
+    book: "01",
   });
 
   const errors = useRef({
@@ -48,33 +49,11 @@ function ChartInputs(props) {
 
   const keyStroke = useRef("");
 
-  //  function makeInputsRequest(e) {
-  //    if (e === null || e.which !== 13) {
-  //      return;
-  //    }
-  //
-  //    // if (state.symbolID === null) {
-  //    //   return;
-  //    // }
-  //
-  //    // if (state.error.date || state.error.freq || state.error.book) {
-  //    //   return;
-  //    // }
-  //    if (error.date || error.frequency || error.book) {
-  //      return;
-  //    }
-  //
-  //    //chartRequest();
-  //
-  //    // inputsRequest(
-  //    //   dateRef.current.value,
-  //    //   state.symbols[state.symbolID],
-  //    //   freqRef.current.value,
-  //    //   bookRef.current.value
-  //    // );
-  //  }
-
   function changeSet(index) {
+    if (props.chart.isWorking) {
+      return;
+    }
+
     let newIndex = state.currentSetIndex + index;
     let finalIndex = Object.keys(props.symbols).length - 1;
 
@@ -99,11 +78,11 @@ function ChartInputs(props) {
   }
 
   function setSelectedItemIndex(index) {
-    if (index < 0 || index >= state.currentSetItems.length) {
+    if (props.chart.isWorking) {
       return;
     }
 
-    if (props.chart.isWorking) {
+    if (index < 0 || index >= state.currentSetItems.length) {
       return;
     }
 
@@ -115,8 +94,25 @@ function ChartInputs(props) {
     props.chartSetSymbol(state.currentSetItems[index]);
   }
 
+  function makeInputsRequest() {
+    if (errors.current.date || errors.current.freq || errors.current.book) {
+      console.error("inputs error");
+    } else {
+      props.chartSetInputs(
+        state.currentSetItems[state.selectedItemIndex],
+        inputs.date,
+        inputs.freq,
+        inputs.book
+      );
+    }
+  }
+
   function keydownHandler(e) {
     if (e === null) {
+      return;
+    }
+
+    if (e.which !== 32 && props.trade.showPanel) {
       return;
     }
 
@@ -124,7 +120,10 @@ function ChartInputs(props) {
       return;
     }
 
-    if (focused.current.date || focused.current.freq || focused.current.book) {
+    if (
+      e.which !== 13 &&
+      (focused.current.date || focused.current.freq || focused.current.book)
+    ) {
       return;
     }
 
@@ -168,27 +167,43 @@ function ChartInputs(props) {
         switch (e.which) {
           case 72:
             // h
+            //setInputs({
+            //...inputs,
+            //freq: "h",
+            //});
             //props.chartSetFrequency("h");
             break;
           case 68:
             // d
-            inputs.current.freq = "d";
+            setInputs({
+              ...inputs,
+              freq: "d",
+            });
             props.chartSetFrequency("d");
             break;
           case 87:
             // w
-            inputs.current.freq = "w";
+            setInputs({
+              ...inputs,
+              freq: "w",
+            });
             props.chartSetFrequency("w");
             break;
           case 77:
             // m
+            setInputs({
+              ...inputs,
+              freq: "m",
+            });
             props.chartSetFrequency("m");
             break;
           case 13:
             // enter
+            makeInputsRequest();
             break;
           case 32:
             // space
+            props.tradeShowPanel(!props.trade.showPanel);
             break;
           default:
             break;
@@ -198,20 +213,38 @@ function ChartInputs(props) {
   }
 
   useEffect(() => {
+    console.log("chart inputs init");
+
+    const now = new Date();
+    const date = `${now.getFullYear()}${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}`;
+
     props.chartSetInputs(
       state.currentSetItems[state.selectedItemIndex],
-      inputs.current.date,
-      inputs.current.freq,
-      inputs.current.book
+      date,
+      inputs.freq,
+      inputs.book
     );
   }, []);
 
   useEffect(() => {
-    console.log("chart inputs");
+    console.log("chart inputs listener");
 
     window.addEventListener("keydown", keydownHandler);
     return () => window.removeEventListener("keydown", keydownHandler);
-  }, [state]);
+  });
+
+  useEffect(() => {
+    console.log("chart inputs quote");
+
+    if (props.chart.quote.date) {
+      setInputs({
+        ...inputs,
+        date: props.chart.quote.date,
+      });
+    }
+  }, [props.chart.quote]);
 
   return (
     <SideBar>
@@ -229,19 +262,30 @@ function ChartInputs(props) {
 
       <Separator />
 
-      <Button> random date </Button>
+      <Button
+        onClick={() => {
+          if (props.chart.isWorking) {
+            return;
+          }
+
+          props.chartRandomDate();
+        }}
+      >
+        random date
+      </Button>
 
       <LabelInput
         label="Date"
         regex="^[0-9]{8}$"
-        value={`${now.getFullYear()}${(now.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}`}
+        value={inputs.date}
         onFocus={() => (focused.current.date = true)}
         onBlur={() => (focused.current.date = false)}
         onKeyDown={() => {}}
-        onChange={(value) => {
-          inputs.current.date = value;
+        onValueChange={(value) => {
+          setInputs({
+            ...inputs,
+            date: value.trim(),
+          });
         }}
         onError={(err) => {
           errors.current.date = err;
@@ -250,13 +294,16 @@ function ChartInputs(props) {
 
       <LabelInput
         label="Frequency"
-        regex="^[dw]{1}$"
-        value={inputs.current.freq}
+        regex="^[hdwm]{1}$"
+        value={inputs.freq}
         onFocus={() => (focused.current.freq = true)}
         onBlur={() => (focused.current.freq = false)}
         onKeyDown={() => {}}
-        onChange={(value) => {
-          inputs.current.freq = value;
+        onValueChange={(value) => {
+          setInputs({
+            ...inputs,
+            freq: value.trim(),
+          });
         }}
         onError={(err) => {
           errors.current.freq = err;
@@ -266,12 +313,15 @@ function ChartInputs(props) {
       <LabelInput
         label="Book"
         regex="^[0-9a-zA-Z]+$"
-        value="01"
+        value={inputs.book}
         onFocus={() => (focused.current.book = true)}
         onBlur={() => (focused.current.book = false)}
         onKeyDown={() => {}}
-        onChange={(value) => {
-          inputs.current.book = value;
+        onValueChange={(value) => {
+          setInputs({
+            ...inputs,
+            book: value.trim(),
+          });
         }}
         onError={(err) => {
           errors.current.book = err;
@@ -279,36 +329,17 @@ function ChartInputs(props) {
       />
 
       <CheckButton
+        checked={props.chart.showRecords}
         onCheck={(active) => {
+          if (props.chart.isWorking) {
+            return;
+          }
+
           props.chartSetShowRecords(active);
         }}
       >
-        {" "}
-        show records{" "}
+        show records
       </CheckButton>
-
-      <Separator />
-
-      <Button
-        onClick={() => {
-          if (
-            errors.current.date ||
-            errors.current.freq ||
-            errors.current.book
-          ) {
-            console.error("inputs error");
-          } else {
-            props.chartSetInputs(
-              state.currentSetItems[state.selectedItemIndex],
-              inputs.current.date,
-              inputs.current.freq,
-              inputs.current.book
-            );
-          }
-        }}
-      >
-        ok
-      </Button>
     </SideBar>
   );
 }
@@ -316,6 +347,7 @@ function ChartInputs(props) {
 const mapStatetoProps = (state) => ({
   symbols: state.symbols,
   chart: state.chart,
+  trade: state.trade,
 });
 
 export default connect(mapStatetoProps, {
@@ -325,4 +357,6 @@ export default connect(mapStatetoProps, {
   chartSetInputs,
   chartForward,
   chartBackward,
+  chartRandomDate,
+  tradeShowPanel,
 })(ChartInputs);

@@ -2,6 +2,7 @@ export const CHART_START_WORKING = "chart_start_working";
 export const CHART_FINISH_WORKING = "chart_finish_working";
 
 export const CHART_SET_FUNCTION = "chart_set_function";
+export const CHART_REFRESH = "chart_refresh";
 
 export const CHART_SYMBOL_REQUEST = "chart_symbol_request";
 export const CHART_FREQUENCY_REQUEST = "chart_frequency_request";
@@ -72,6 +73,7 @@ export function chartInspectRequest(
 
           if (data["inspect"]) {
             callback(data["inspect"]);
+
             //dispatch({
             //type: INSPECT_SET_INFO,
             //payload: {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { fontBody1 } from "../../styles/typography";
+import { noselect } from "../../styles/common";
 import { layoutVertical, layoutAroundJustified } from "../../styles/layout";
 
 import { willChange } from "../../styles/common";
@@ -19,6 +20,7 @@ const Container = styled.div`
 const Label = styled.span`
   ${fontBody1}
   ${horizontalMargin}
+  ${noselect}
   color: white;
   margin-bottom: 0.1em;
 `;
@@ -49,24 +51,19 @@ const Input = styled.input.attrs((props) => ({
 `;
 
 function LabelInput(props) {
-  const [value, setValue] = useState(props.value);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log("init input effect");
+    console.log("label input value");
     checkError(props.value);
-  }, []);
+  }, [props.value]);
 
   useEffect(() => {
-    console.log("input effect");
-    if (props.onChange) {
-      props.onChange(value);
-    }
-
+    console.log("label input error");
     if (props.onError) {
       props.onError(error);
     }
-  }, [value, error]);
+  }, [error]);
 
   function checkError(value) {
     if (props.regex) {
@@ -86,13 +83,15 @@ function LabelInput(props) {
     <Container>
       <Label>{props.label}</Label>
       <Input
-        value={value}
+        value={props.value}
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         onKeyDown={props.onKeyDown}
         onChange={(e) => {
-          checkError(e.target.value);
-          setValue(e.target.value);
+          //checkError(e.target.value);
+          if (props.onValueChange) {
+            props.onValueChange(e.target.value);
+          }
         }}
         error={error}
       />
