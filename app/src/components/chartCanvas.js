@@ -369,6 +369,7 @@ function ChartCanvas(props) {
     props.chart.symbol,
     props.chart.date,
     props.chart.frequency,
+    props.chart.range,
     props.chart.book,
     props.chart.showRecords,
     props.chart.parameters,

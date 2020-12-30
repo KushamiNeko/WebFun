@@ -5,7 +5,7 @@ import { fontBody1 } from "../../styles/typography";
 import { noselect } from "../../styles/common";
 import { layoutVertical, layoutAroundJustified } from "../../styles/layout";
 
-import { willChange } from "../../styles/common";
+import { transitionLiteral } from "../../styles/common";
 
 import { horizontalMargin, borderOutline } from "./common";
 
@@ -40,8 +40,7 @@ const Input = styled.input.attrs((props) => ({
   padding-left: 0.25em;
   padding-right: 0.25em;
 
-  ${willChange("color", "0.1s")}
-  ${willChange("background-color", "0.1s")}
+  ${transitionLiteral("color 0.1s ease, background-color 0.1s ease")}
 
   :focus {
     color: ${(props) => (props.error ? "white" : "black")};

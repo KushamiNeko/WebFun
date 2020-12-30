@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { chartSetParameters } from "../actions/chartActions";
+import { chartSetRange } from "../actions/chartActions";
 
 import { layoutVertical } from "../styles/layout";
 
@@ -16,26 +16,63 @@ const Container = styled.div`
   min-width: 212px;
 `;
 
-const rangePreset = ["3M", "6M", "9M", "1Y", "3Y", "5Y"];
+const rangePresetDaily = ["3M", "6M", "9M", "1Y"];
+const rangePresetWeekly = ["3Y", "4Y", "5Y"];
+const rangePresetMonthly = ["15Y", "18Y", "20Y"];
 
 function ChartRange(props) {
+  const [state, setState] = useState({
+    rangeOptions: [],
+  });
+
+  useEffect(() => {
+    if (props.chart.frequency === "d") {
+      setState({
+        ...state,
+        rangeOptions: rangePresetDaily,
+      });
+    } else if (props.chart.frequency === "w") {
+      setState({
+        ...state,
+        rangeOptions: rangePresetWeekly,
+      });
+    } else if (props.chart.frequency === "m") {
+      setState({
+        ...state,
+        rangeOptions: rangePresetMonthly,
+      });
+    }
+  }, [props.chart.frequency]);
+
   return (
     <Container>
       <Title>Chart Range</Title>
       <Separator />
-      {rangePreset.map((item, index) => (
-        <CheckButton key={index}>{item}</CheckButton>
-      ))}
+      {state.rangeOptions.map((item, index) => {
+        return (
+          <CheckButton
+            key={index}
+            checked={index === state.rangeOptions.indexOf(props.chart.range)}
+            onCheck={() => {
+              if (props.chart.isWorking) {
+                return;
+              }
+
+              props.chartSetRange(item);
+            }}
+          >
+            {item}
+          </CheckButton>
+        );
+      })}
     </Container>
   );
 }
 
 const mapStatetoProps = (state) => ({
-  symbols: state.symbols,
-  parameters: state.parameters,
   chart: state.chart,
 });
 
 export default connect(mapStatetoProps, {
-  chartSetParameters,
+  chartSetRange,
 })(ChartRange);

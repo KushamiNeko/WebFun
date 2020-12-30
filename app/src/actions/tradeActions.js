@@ -2,7 +2,28 @@ import { CHART_REFRESH } from "./chartActions";
 
 export const TRADE_SHOW_PANEL = "trade_show_panel";
 export const TRADE_START_WORKING = "trade_start_working";
-export const TRADE_FINISH_WORKING = "TRADE_FINISH_WORKING";
+export const TRADE_FINISH_WORKING = "trade_finish_working";
+
+export const TRADE_SET_BOOKS = "trade_set_books";
+export const TRADE_SET_STATISTIC = "trade_set_statistic";
+export const TRADE_SET_STOP_ORDERS = "trade_set_stop_orders";
+
+function tradeURL(gate) {
+  // const origin = "http://127.0.0.1:5000";
+  const origin = `${window.location.protocol}//${window.location.hostname}:5000`;
+
+  let url = `${origin}/service/trade/${gate}`;
+
+  const now = new Date();
+
+  url = `${url}?timestemp=${Math.round(now.getTime() / 1000)}`;
+  return url;
+}
+
+function updateOrderBook(order) {
+  order["book"] = `${order["symbol"].toUpperCase()}${order["book"]}`;
+  return order;
+}
 
 export function tradeShowPanel(active) {
   return function (dispatch) {
@@ -13,23 +34,6 @@ export function tradeShowPanel(active) {
       },
     });
   };
-}
-
-function updateOrderBook(order) {
-  order["book"] = `${order["symbol"].toUpperCase()}${order["book"]}`;
-  return order;
-}
-
-function requestUrl(gate) {
-  // const origin = "http://127.0.0.1:5000";
-  const origin = `${window.location.protocol}//${window.location.hostname}:5000`;
-
-  let url = `${origin}/service/trade/${gate}`;
-
-  const now = new Date();
-
-  url = `${url}?timestemp=${Math.round(now.getTime() / 1000)}`;
-  return url;
 }
 
 export function tradeNewMarketOrder(order) {
@@ -54,7 +58,7 @@ export function tradeNewMarketOrder(order) {
       },
     };
 
-    const url = `${requestUrl("order")}&order=market`;
+    const url = `${tradeURL("order")}&order=market`;
 
     fetch(url, options)
       .then((res) => res.json())
@@ -81,57 +85,212 @@ export function tradeNewMarketOrder(order) {
   };
 }
 
-//findAllBooks(): void {
-//if (this._isWorking) {
-//return;
-//}
+export function tradeNewStopOrder(order) {
+  return function (dispatch, getState) {
+    const trade = getState().trade;
 
-//this._isWorking = true;
+    if (trade.isWorking) {
+      return;
+    }
 
-//this._http
-//.get(`${this._requestUrl("statistic")}&function=books`)
-//.subscribe((data) => {
-//if (Object.keys(data).includes("error")) {
-//alert(`${data["error"]}`);
-//this._completed();
-//return;
-//}
+    dispatch({
+      type: TRADE_START_WORKING,
+    });
 
-//this.books.next(data["data"]);
-//// this._isWorking = false;
-//// this.isWorking.next(this._isWorking);
-//this._completed();
-//});
-//}
+    order = updateOrderBook(order);
 
-//readStatistic(titles: Array<string> | null): void {
-//if (titles == null) {
-//this.statistic.next({});
-//return;
-//}
+    const options = {
+      method: "POST",
+      body: JSON.stringify(order),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
-//if (this._isWorking) {
-//return;
-//}
+    const url = `${tradeURL("order")}&order=stop`;
 
-//this._isWorking = true;
+    fetch(url, options)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Object.keys(data).includes("error")) {
+          console.error(`${data["error"]}`);
+        } else {
+          dispatch({
+            type: TRADE_SET_STOP_ORDERS,
+            payload: {
+              stopOrders: data["data"],
+            },
+          });
+        }
 
-//this._http
-//.get(
-//`${this._requestUrl(
-//"statistic"
-//)}&function=statistic&titles=${titles.join(",")}`
-//)
-//.subscribe((data) => {
-//if (Object.keys(data).includes("error")) {
-//alert(`${data["error"]}`);
-//this._completed();
-//return;
-//}
+        dispatch({
+          type: TRADE_FINISH_WORKING,
+        });
 
-//this.statistic.next(data);
-//// this._isWorking = false;
-//// this.isWorking.next(this._isWorking);
-//this._completed();
-//});
-//}
+        dispatch({
+          type: CHART_REFRESH,
+        });
+
+        dispatch({
+          type: TRADE_SHOW_PANEL,
+          payload: {
+            showPanel: false,
+          },
+        });
+      });
+  };
+}
+
+export function tradeDeleteStopOrder(index) {
+  return function (dispatch, getState) {
+    const trade = getState().trade;
+
+    if (trade.isWorking) {
+      return;
+    }
+
+    dispatch({
+      type: TRADE_START_WORKING,
+    });
+
+    const options = {
+      method: "DELETE",
+    };
+
+    const url = `${tradeURL("order")}&index=${index}`;
+
+    fetch(url, options)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Object.keys(data).includes("error")) {
+          console.error(`${data["error"]}`);
+        } else {
+          dispatch({
+            type: TRADE_SET_STOP_ORDERS,
+            payload: {
+              stopOrders: data["data"],
+            },
+          });
+        }
+
+        dispatch({
+          type: TRADE_FINISH_WORKING,
+        });
+
+        dispatch({
+          type: CHART_REFRESH,
+        });
+      });
+  };
+}
+
+export function tradeReadAllStopOrders() {
+  return function (dispatch, getState) {
+    const trade = getState().trade;
+
+    if (trade.isWorking) {
+      return;
+    }
+
+    dispatch({
+      type: TRADE_START_WORKING,
+    });
+
+    const url = `${tradeURL("order")}&order=stop`;
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Object.keys(data).includes("error")) {
+          console.error(`${data["error"]}`);
+        } else {
+          dispatch({
+            type: TRADE_SET_STOP_ORDERS,
+            payload: {
+              stopOrders: data["data"],
+            },
+          });
+        }
+
+        dispatch({
+          type: TRADE_FINISH_WORKING,
+        });
+      });
+  };
+}
+
+export function tradeReadAllBooks() {
+  return function (dispatch, getState) {
+    const trade = getState().trade;
+
+    if (trade.isWorking) {
+      return;
+    }
+
+    dispatch({
+      type: TRADE_START_WORKING,
+    });
+
+    const url = `${tradeURL("statistic")}&function=books`;
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Object.keys(data).includes("error")) {
+          console.error(`${data["error"]}`);
+        } else {
+          dispatch({
+            type: TRADE_SET_BOOKS,
+            payload: {
+              books: data["data"],
+            },
+          });
+        }
+
+        dispatch({
+          type: TRADE_FINISH_WORKING,
+        });
+      });
+  };
+}
+
+export function tradeReadStatistic(titles) {
+  return function (dispatch, getState) {
+    if (!titles) {
+      return;
+    }
+
+    const trade = getState().trade;
+
+    if (trade.isWorking) {
+      return;
+    }
+
+    dispatch({
+      type: TRADE_START_WORKING,
+    });
+
+    const url = `${tradeURL(
+      "statistic"
+    )}&function=statistic&titles=${titles.join(",")}`;
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Object.keys(data).includes("error")) {
+          console.error(`${data["error"]}`);
+        } else {
+          dispatch({
+            type: TRADE_SET_STOP_ORDERS,
+            payload: {
+              statistic: data["data"],
+            },
+          });
+        }
+
+        dispatch({
+          type: TRADE_FINISH_WORKING,
+        });
+      });
+  };
+}

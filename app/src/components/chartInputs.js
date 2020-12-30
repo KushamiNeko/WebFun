@@ -6,7 +6,7 @@ import LabelInput from "./inputs/labelInput";
 import CheckButton from "./inputs/checkButton";
 import Button from "./inputs/button";
 import Separator from "./inputs/separator";
-import TableSet from "./inputs/tableSet";
+import OptionTableSet from "./inputs/optionTableSet";
 
 import SideBar from "./sidebar";
 
@@ -248,7 +248,8 @@ function ChartInputs(props) {
 
   return (
     <SideBar>
-      <TableSet
+      <OptionTableSet
+        multiSet
         label="Symbols"
         set={Object.keys(props.symbols)[state.currentSetIndex]}
         items={state.currentSetItems}
