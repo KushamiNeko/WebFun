@@ -98,9 +98,15 @@ function ChartInputs(props) {
     if (errors.current.date || errors.current.freq || errors.current.book) {
       console.error("inputs error");
     } else {
+      let date = inputs.date;
+      if (date.length === 4) {
+        date = `${date}1231`;
+      }
+
       props.chartSetInputs(
         state.currentSetItems[state.selectedItemIndex],
-        inputs.date,
+        //inputs.date,
+        date,
         inputs.freq,
         inputs.book
       );
@@ -127,94 +133,165 @@ function ChartInputs(props) {
       return;
     }
 
-    if (e.which === 38 || e.which === 40) {
-      if (state.selectedItemIndex === null) {
-        return;
-      }
+    let index;
+    switch (e.which) {
+      case 38:
+        // up
 
-      let index;
-      if (e.which === 38) {
+        if (state.selectedItemIndex === null) {
+          return;
+        }
+
         index = state.selectedItemIndex - 1;
         if (index < 0) {
           index = state.currentSetItems.length - 1;
         }
-      } else if (e.which === 40) {
+
+        setSelectedItemIndex(index);
+        break;
+
+      case 40:
+        // down
+
+        if (state.selectedItemIndex === null) {
+          return;
+        }
+
         index = state.selectedItemIndex + 1;
         if (index > state.currentSetItems.length - 1) {
           index = 0;
         }
-      }
 
-      setSelectedItemIndex(index);
-    } else {
-      if (e.which === 37) {
-        props.chartBackward();
-      } else if (e.which === 39) {
-        props.chartForward();
-      } else if (e.which >= 48 && e.which <= 57) {
-        // number keys 48: 0, 49-57 : 1-9
-        keyStroke.current += (e.which - 48).toString();
+        setSelectedItemIndex(index);
+        break;
 
-        setTimeout(() => {
-          if (keyStroke.current !== "") {
-            setSelectedItemIndex(parseInt(keyStroke.current) - 1);
+      case 37:
+        // left
+
+        if (e.shiftKey || e.ctrlKey) {
+          let date;
+          if (e.shiftKey) {
+            date = `${
+              parseInt(inputs.date.substring(0, 4)) - 1
+            }${inputs.date.substring(4)}`;
+          } else if (e.ctrlKey) {
+            date = `${parseInt(inputs.date.substring(0, 4)) - 1}1231`;
           }
 
-          keyStroke.current = "";
-        }, 250);
-      } else {
-        //console.log(e.which);
-        switch (e.which) {
-          case 72:
-            // h
-            //setInputs({
-            //...inputs,
-            //freq: "h",
-            //});
-            //props.chartSetFrequency("h");
-            break;
-          case 68:
-            // d
-            setInputs({
-              ...inputs,
-              freq: "d",
-            });
-            props.chartSetFrequency("d");
-            break;
-          case 87:
-            // w
-            setInputs({
-              ...inputs,
-              freq: "w",
-            });
-            props.chartSetFrequency("w");
-            break;
-          case 77:
-            // m
-            setInputs({
-              ...inputs,
-              freq: "m",
-            });
-            props.chartSetFrequency("m");
-            break;
-          case 13:
-            // enter
-            makeInputsRequest();
-            break;
-          case 32:
-            // space
-            props.tradeShowPanel(!props.trade.showPanel);
-            break;
-          default:
-            break;
+          props.chartSetInputs(
+            state.currentSetItems[state.selectedItemIndex],
+            date,
+            inputs.freq,
+            inputs.book
+          );
+        } else {
+          props.chartBackward();
         }
-      }
+        break;
+
+      case 39:
+        // right
+
+        if (e.shiftKey || e.ctrlKey) {
+          let date;
+          if (e.shiftKey) {
+            date = `${
+              parseInt(inputs.date.substring(0, 4)) + 1
+            }${inputs.date.substring(4)}`;
+          } else if (e.ctrlKey) {
+            date = `${parseInt(inputs.date.substring(0, 4))}1231`;
+          }
+
+          const now = new Date();
+
+          const dateNow = `${now.getFullYear()}${(now.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}`;
+
+          if (parseInt(date) > parseInt(dateNow)) {
+            date = dateNow;
+          }
+
+          props.chartSetInputs(
+            state.currentSetItems[state.selectedItemIndex],
+            date,
+            inputs.freq,
+            inputs.book
+          );
+        } else {
+          props.chartForward();
+        }
+        break;
+
+      case 72:
+        // h
+        //setInputs({
+        //...inputs,
+        //freq: "h",
+        //});
+        //props.chartSetFrequency("h");
+        break;
+
+      case 68:
+        // d
+
+        setInputs({
+          ...inputs,
+          freq: "d",
+        });
+        props.chartSetFrequency("d");
+        break;
+
+      case 87:
+        // w
+
+        setInputs({
+          ...inputs,
+          freq: "w",
+        });
+        props.chartSetFrequency("w");
+        break;
+
+      case 77:
+        // m
+
+        setInputs({
+          ...inputs,
+          freq: "m",
+        });
+        props.chartSetFrequency("m");
+        break;
+
+      case 13:
+        // enter
+
+        makeInputsRequest();
+        break;
+
+      case 32:
+        // space
+
+        props.tradeShowPanel(!props.trade.showPanel);
+        break;
+
+      default:
+        if (e.which >= 48 && e.which <= 57) {
+          // number keys 48: 0, 49-57 : 1-9
+
+          keyStroke.current += (e.which - 48).toString();
+
+          setTimeout(() => {
+            if (keyStroke.current !== "") {
+              setSelectedItemIndex(parseInt(keyStroke.current) - 1);
+            }
+
+            keyStroke.current = "";
+          }, 250);
+        }
     }
   }
 
   useEffect(() => {
-    console.log("chart inputs init");
-
     const now = new Date();
     const date = `${now.getFullYear()}${(now.getMonth() + 1)
       .toString()
@@ -229,15 +306,11 @@ function ChartInputs(props) {
   }, []);
 
   useEffect(() => {
-    console.log("chart inputs listener");
-
     window.addEventListener("keydown", keydownHandler);
     return () => window.removeEventListener("keydown", keydownHandler);
   });
 
   useEffect(() => {
-    console.log("chart inputs quote");
-
     if (props.chart.quote.date) {
       setInputs({
         ...inputs,
@@ -277,7 +350,7 @@ function ChartInputs(props) {
 
       <LabelInput
         label="Date"
-        regex="^[0-9]{8}$"
+        regex="^(?:[0-9]{8}|[0-9]{4})$"
         value={inputs.date}
         onFocus={() => (focused.current.date = true)}
         onBlur={() => (focused.current.date = false)}

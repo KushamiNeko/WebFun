@@ -28,18 +28,18 @@ const ChartInfo = styled.div`
   }
 
   ${noselect}
-  ${transitionLiteral("top 0.1s ease, left 0.1s ease")}
 
   display: ${(props) => (props.active ? "block" : "none")};
 
   white-space: pre;
   position: absolute;
-  left: 29%;
   z-index: 2;
   color: white;
   opacity: var(--dark-primary-opacity);
   background-color: rgba(0, 0, 0, 0.5);
 `;
+//${transitionLiteral("top 0.05s ease, left 0.05s ease")}
+//left: 25%;
 
 const ChartCover = styled.canvas`
   ${noselect}
@@ -205,25 +205,25 @@ function ChartCanvas(props) {
       );
     }
 
-    //const offset = 20;
+    const offset = 35;
 
-    //let l;
-    //if (eventXOffset(e) > inspectRef.current.width / 2) {
-    //  l = `${e.clientX - infoRef.current.clientWidth - offset}px`;
-    //} else {
-    //  l = `${e.clientX + offset}px`;
-    //}
+    let l;
+    if (eventXOffset(e) > inspectRef.current.width / 2) {
+      l = `${e.clientX - infoRef.current.clientWidth - offset}px`;
+    } else {
+      l = `${e.clientX + offset}px`;
+    }
 
-    //infoRef.current.style.left = l;
+    infoRef.current.style.left = l;
 
-    //let t;
-    //if (eventYOffset(e) > inspectRef.current.height / 2) {
-    //  t = `${e.clientY - infoRef.current.offsetHeight - offset}px`;
-    //} else {
-    //  t = `${e.clientY + offset}px`;
-    //}
+    let t;
+    if (eventYOffset(e) > inspectRef.current.height / 2) {
+      t = `${e.clientY - infoRef.current.offsetHeight - offset}px`;
+    } else {
+      t = `${e.clientY + offset}px`;
+    }
 
-    //infoRef.current.style.top = t;
+    infoRef.current.style.top = t;
   }
 
   function inspect(e) {
@@ -335,8 +335,6 @@ function ChartCanvas(props) {
   }
 
   useEffect(() => {
-    console.log("chart image reload");
-
     const imgLoaded = () => {
       initCanvasSize();
     };
@@ -362,7 +360,6 @@ function ChartCanvas(props) {
   }, [state.showInfo]);
 
   useEffect(() => {
-    console.log("useEffect chart request");
     props.chartImageRequest();
   }, [
     props.chart.function,

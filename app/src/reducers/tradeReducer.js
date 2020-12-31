@@ -5,6 +5,7 @@ import {
   TRADE_SET_BOOKS,
   TRADE_SET_STATISTIC,
   TRADE_SET_STOP_ORDERS,
+  TRADE_SET_STATISTIC_RANGE,
 } from "../actions/tradeActions";
 
 const initialState = {
@@ -16,6 +17,9 @@ const initialState = {
 
   books: [],
   statistic: {},
+
+  startDate: "",
+  endDate: "",
 };
 
 export default function (state = initialState, action) {
@@ -55,6 +59,14 @@ export default function (state = initialState, action) {
         ...state,
         statistic: action.payload.statistic,
       };
+
+    case TRADE_SET_STATISTIC_RANGE:
+      return {
+        ...state,
+        startDate: action.payload.startDate,
+        endDate: action.payload.endDate,
+      };
+
 
     default:
       return state;

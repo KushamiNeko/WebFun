@@ -16,5 +16,5 @@ function App() {
   );
 }
 
-//<StatisticView />
+<StatisticView />;
 export default App;

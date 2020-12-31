@@ -5,8 +5,10 @@ export const TRADE_START_WORKING = "trade_start_working";
 export const TRADE_FINISH_WORKING = "trade_finish_working";
 
 export const TRADE_SET_BOOKS = "trade_set_books";
-export const TRADE_SET_STATISTIC = "trade_set_statistic";
 export const TRADE_SET_STOP_ORDERS = "trade_set_stop_orders";
+export const TRADE_SET_STATISTIC = "trade_set_statistic";
+
+export const TRADE_SET_STATISTIC_RANGE = "trade_set_statistic_range";
 
 function tradeURL(gate) {
   // const origin = "http://127.0.0.1:5000";
@@ -17,6 +19,7 @@ function tradeURL(gate) {
   const now = new Date();
 
   url = `${url}?timestemp=${Math.round(now.getTime() / 1000)}`;
+
   return url;
 }
 
@@ -272,7 +275,9 @@ export function tradeReadStatistic(titles) {
 
     const url = `${tradeURL(
       "statistic"
-    )}&function=statistic&titles=${titles.join(",")}`;
+    )}&function=statistic&titles=${titles.join(",")}&startDate=${
+      trade.startDate
+    }&endDate=${trade.endDate}`;
 
     fetch(url)
       .then((res) => res.json())
@@ -281,9 +286,9 @@ export function tradeReadStatistic(titles) {
           console.error(`${data["error"]}`);
         } else {
           dispatch({
-            type: TRADE_SET_STOP_ORDERS,
+            type: TRADE_SET_STATISTIC,
             payload: {
-              statistic: data["data"],
+              statistic: data,
             },
           });
         }
@@ -292,5 +297,17 @@ export function tradeReadStatistic(titles) {
           type: TRADE_FINISH_WORKING,
         });
       });
+  };
+}
+
+export function tradeSetStatisticRange(start, end) {
+  return function (dispatch) {
+    dispatch({
+      type: TRADE_SET_STATISTIC_RANGE,
+      payload: {
+        startDate: start,
+        endDate: end,
+      },
+    });
   };
 }

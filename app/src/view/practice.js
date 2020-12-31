@@ -18,8 +18,6 @@ const Container = styled.div`
 `;
 
 function PracticeView(props) {
-  console.log("practice");
-
   return (
     <>
       <Container>

@@ -53,12 +53,10 @@ function LabelInput(props) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log("label input value");
     checkError(props.value);
   }, [props.value]);
 
   useEffect(() => {
-    console.log("label input error");
     if (props.onError) {
       props.onError(error);
     }

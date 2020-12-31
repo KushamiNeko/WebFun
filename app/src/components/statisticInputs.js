@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
 
-import { tradeReadAllBooks } from "../actions/tradeActions";
+import {
+  tradeReadAllBooks,
+  tradeReadStatistic,
+  tradeSetStatisticRange,
+} from "../actions/tradeActions";
 
 import SideBar from "./sidebar";
 import OptionTableSet from "./inputs/optionTableSet";
@@ -14,6 +18,14 @@ function StatisticInputs(props) {
   const [state, setState] = useState({
     books: [],
     selected: [],
+
+    startDate: "",
+    endDate: "",
+  });
+
+  const errors = useRef({
+    startDate: false,
+    endDate: false,
   });
 
   useEffect(() => {
@@ -26,6 +38,20 @@ function StatisticInputs(props) {
       books: props.trade.books,
     });
   }, [props.trade.books]);
+
+  useEffect(() => {
+    if (state.selected.length === 0) {
+      return;
+    }
+
+    const titles = [];
+
+    state.selected.forEach((i) => {
+      titles.push(state.books[i]);
+    });
+
+    props.tradeReadStatistic(titles);
+  }, [state.selected, props.trade.startDate, props.trade.endDate]);
 
   return (
     <SideBar>
@@ -53,38 +79,84 @@ function StatisticInputs(props) {
         }}
       />
 
-      <Button>all</Button>
-      <Button>clear</Button>
+      <Button
+        onClick={() => {
+          const newArray = [];
+
+          for (let i = 0; i < state.books.length; i++) {
+            newArray.push(i);
+          }
+
+          setState({
+            ...state,
+            selected: newArray,
+          });
+        }}
+      >
+        all
+      </Button>
+
+      <Button
+        onClick={() => {
+          setState({
+            ...state,
+            selected: [],
+          });
+        }}
+      >
+        clear
+      </Button>
 
       <Separator />
 
       <LabelInput
         label="Start Date"
-        regex="^[0-9]{8}$"
-        value=""
+        regex="^(?:[0-9]{8})?$"
+        value={state.startDate}
         onFocus={() => {}}
         onBlur={() => {}}
         onKeyDown={() => {}}
         onValueChange={(value) => {
+          setState({
+            ...state,
+            startDate: value,
+          });
         }}
         onError={(err) => {
+          errors.current.startDate = err;
         }}
       />
 
       <LabelInput
         label="End Date"
-        regex="^[0-9]{8}$"
-        value=""
+        regex="^(?:[0-9]{8})?$"
+        value={state.endDate}
         onFocus={() => {}}
         onBlur={() => {}}
         onKeyDown={() => {}}
         onValueChange={(value) => {
+          setState({
+            ...state,
+            endDate: value,
+          });
         }}
         onError={(err) => {
+          errors.current.endDate = err;
         }}
       />
 
-      <Button>ok</Button>
+      <Button
+        onClick={() => {
+          if (errors.current.startDate || errors.current.endDate) {
+            console.error("invalid start date or end date");
+            return;
+          }
+
+          props.tradeSetStatisticRange(state.startDate, state.endDate);
+        }}
+      >
+        ok
+      </Button>
     </SideBar>
   );
 }
@@ -95,4 +167,6 @@ const mapStatetoProps = (state) => ({
 
 export default connect(mapStatetoProps, {
   tradeReadAllBooks,
+  tradeReadStatistic,
+  tradeSetStatisticRange,
 })(StatisticInputs);

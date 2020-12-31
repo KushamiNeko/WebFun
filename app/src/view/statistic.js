@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { layoutHorizontal } from "../styles/layout";
 
 import StatisticInputs from "../components/statisticInputs";
+import StatisticTable from "../components/statisticTable";
 
 import Modal from "../components/modal";
 
@@ -17,6 +18,7 @@ function StatisticView(props) {
     <>
       <Container>
         <StatisticInputs />
+        <StatisticTable />
       </Container>
     </>
   );

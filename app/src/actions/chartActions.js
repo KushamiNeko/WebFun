@@ -131,8 +131,6 @@ export function chartImageRequest() {
           const image = `data:image/png;base64,${data["img"]}`;
           const { img, range, ...quote } = data;
 
-          console.log(data);
-
           dispatch({
             type: CHART_SET_CHART_DATA,
             payload: {

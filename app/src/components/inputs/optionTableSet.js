@@ -32,13 +32,11 @@ function OptionTableSet(props) {
         {props.multiSet ? (
           <Button
             onClick={() => {
-              console.log("change set click");
               if (props.onChangeSet) {
                 props.onChangeSet(1);
               }
             }}
             onContextMenu={(e) => {
-              console.log("change set context menu");
               e.preventDefault();
 
               if (props.onChangeSet) {
