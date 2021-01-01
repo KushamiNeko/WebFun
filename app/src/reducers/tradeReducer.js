@@ -22,7 +22,7 @@ const initialState = {
   endDate: "",
 };
 
-export default function (state = initialState, action) {
+export default function tradeReducer(state = initialState, action) {
   switch (action.type) {
     case TRADE_START_WORKING:
       return {

@@ -1,3 +1,5 @@
+import { useLocation, withRouter } from "react-router-dom";
+
 import styled from "styled-components";
 
 import { layoutHorizontal, layoutAroundJustified } from "../styles/layout";
@@ -39,14 +41,30 @@ const Divider = styled.span`
   opacity: var(--dark-divider-opacity);
 `;
 
-function Navbar() {
+function Navbar(props) {
+  const location = useLocation();
+
   return (
     <Container>
-      <Button>Practice</Button>
+      <Button
+        activated={location.pathname.includes("practice")}
+        onClick={() => {
+          props.history.push("/practice");
+        }}
+      >
+        Practice
+      </Button>
       <Divider>/</Divider>
-      <Button>Statistic</Button>
+      <Button
+        activated={location.pathname.includes("statistic")}
+        onClick={() => {
+          props.history.push("/statistic");
+        }}
+      >
+        Statistic
+      </Button>
     </Container>
   );
 }
 
-export default Navbar;
+export default withRouter(Navbar);

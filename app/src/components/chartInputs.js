@@ -118,11 +118,15 @@ function ChartInputs(props) {
       return;
     }
 
-    if (e.which !== 32 && props.trade.showPanel) {
+    if (props.chart.isWorking) {
       return;
     }
 
-    if (props.chart.isWorking) {
+    if (props.error.showPanel) {
+      return;
+    }
+
+    if (e.which !== 32 && props.trade.showPanel) {
       return;
     }
 
@@ -303,6 +307,7 @@ function ChartInputs(props) {
       inputs.freq,
       inputs.book
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -317,6 +322,7 @@ function ChartInputs(props) {
         date: props.chart.quote.date,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.chart.quote]);
 
   return (
@@ -422,6 +428,7 @@ const mapStatetoProps = (state) => ({
   symbols: state.symbols,
   chart: state.chart,
   trade: state.trade,
+  error: state.error,
 });
 
 export default connect(mapStatetoProps, {

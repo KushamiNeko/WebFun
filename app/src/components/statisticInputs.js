@@ -30,6 +30,7 @@ function StatisticInputs(props) {
 
   useEffect(() => {
     props.tradeReadAllBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ function StatisticInputs(props) {
       ...state,
       books: props.trade.books,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.trade.books]);
 
   useEffect(() => {
@@ -51,6 +53,7 @@ function StatisticInputs(props) {
     });
 
     props.tradeReadStatistic(titles);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.selected, props.trade.startDate, props.trade.endDate]);
 
   return (

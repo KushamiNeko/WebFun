@@ -54,6 +54,7 @@ function TradeInputs(props) {
         book: props.chart.book,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.chart.quote, props.chart.symbol, props.chart.book]);
 
   return (
@@ -166,7 +167,7 @@ function TradeInputs(props) {
           }
         }}
       >
-        {inputs.operation == "+" ? "long" : "short"}
+        {inputs.operation === "+" ? "long" : "short"}
       </Button>
 
       <Separator />

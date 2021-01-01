@@ -54,12 +54,14 @@ function LabelInput(props) {
 
   useEffect(() => {
     checkError(props.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.value]);
 
   useEffect(() => {
     if (props.onError) {
       props.onError(error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   function checkError(value) {

@@ -42,6 +42,7 @@ function ChartRange(props) {
         rangeOptions: rangePresetMonthly,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.chart.frequency]);
 
   return (

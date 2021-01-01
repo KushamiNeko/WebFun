@@ -11,7 +11,7 @@ import styled from "styled-components";
 
 import { fontSubhead, fontBody1 } from "../styles/typography";
 import { layout } from "../styles/layout";
-import { noselect, willChange, transitionLiteral } from "../styles/common";
+import { noselect, willChange } from "../styles/common";
 
 const Container = styled.div``;
 
@@ -30,6 +30,9 @@ const ChartInfo = styled.div`
   ${noselect}
 
   display: ${(props) => (props.active ? "block" : "none")};
+
+  padding: 8px 16px 8px 16px;
+  border-radius: 16px;
 
   white-space: pre;
   position: absolute;
@@ -357,10 +360,12 @@ function ChartCanvas(props) {
       window.removeEventListener("mousemove", handlerMove);
       window.removeEventListener("mousedown", handlerDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.showInfo]);
 
   useEffect(() => {
     props.chartImageRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     props.chart.function,
     props.chart.symbol,

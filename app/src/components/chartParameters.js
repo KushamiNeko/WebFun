@@ -41,6 +41,7 @@ function ChartParameters(props) {
       parameters: Object.values(props.parameters)[0],
       checkedParametersIndex: defaultParameters[0],
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -54,6 +55,7 @@ function ChartParameters(props) {
     });
 
     props.chartSetParameters(ps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.preset, state.checkedParametersIndex]);
 
   return (

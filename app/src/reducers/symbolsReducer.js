@@ -122,6 +122,7 @@ const initialState = {
     // "GVZ",
     "CL",
     // "OVX",
+    "ZS",
   ],
 };
 

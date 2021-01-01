@@ -1,3 +1,5 @@
+import { ERROR_SHOW_MESSAGE } from "./errorActions";
+
 export const CHART_START_WORKING = "chart_start_working";
 export const CHART_FINISH_WORKING = "chart_finish_working";
 
@@ -73,6 +75,12 @@ export function chartInspectRequest(
         .then((data) => {
           if (Object.keys(data).includes("error")) {
             console.error(`${data["error"]}`);
+            dispatch({
+              type: ERROR_SHOW_MESSAGE,
+              payload: {
+                message: data["error"],
+              },
+            });
             return;
           }
 
@@ -89,6 +97,12 @@ export function chartInspectRequest(
         })
         .catch((error) => {
           console.error(error);
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: error,
+            },
+          });
         });
     } else {
       dispatch({
@@ -120,6 +134,12 @@ export function chartImageRequest() {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
 
           dispatch({
             type: CHART_FINISH_WORKING,
@@ -149,6 +169,13 @@ export function chartImageRequest() {
       })
       .catch((error) => {
         console.error(error);
+        dispatch({
+          type: ERROR_SHOW_MESSAGE,
+          payload: {
+            message: error,
+          },
+        });
+
         dispatch({
           type: CHART_FINISH_WORKING,
         });

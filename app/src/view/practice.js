@@ -12,6 +12,8 @@ import ChartRange from "../components/chartRange";
 
 import TradeInputs from "../components/tradeInputs";
 
+import ErrorMessage from "../components/errorMessage";
+
 const Container = styled.div`
   ${layoutHorizontal}
   height: 97%;
@@ -29,6 +31,8 @@ function PracticeView(props) {
         <ChartRange />
         <ChartParameters />
       </Modal>
+
+      <ErrorMessage />
     </>
   );
 }

@@ -1,3 +1,5 @@
+import { ERROR_SHOW_MESSAGE } from "./errorActions";
+
 import { CHART_REFRESH } from "./chartActions";
 
 export const TRADE_SHOW_PANEL = "trade_show_panel";
@@ -68,6 +70,12 @@ export function tradeNewMarketOrder(order) {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
         }
 
         dispatch({
@@ -117,6 +125,12 @@ export function tradeNewStopOrder(order) {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
         } else {
           dispatch({
             type: TRADE_SET_STOP_ORDERS,
@@ -167,6 +181,13 @@ export function tradeDeleteStopOrder(index) {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
         } else {
           dispatch({
             type: TRADE_SET_STOP_ORDERS,
@@ -206,6 +227,13 @@ export function tradeReadAllStopOrders() {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
         } else {
           dispatch({
             type: TRADE_SET_STOP_ORDERS,
@@ -241,6 +269,13 @@ export function tradeReadAllBooks() {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
         } else {
           dispatch({
             type: TRADE_SET_BOOKS,
@@ -284,6 +319,13 @@ export function tradeReadStatistic(titles) {
       .then((data) => {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
+
+          dispatch({
+            type: ERROR_SHOW_MESSAGE,
+            payload: {
+              message: data["error"],
+            },
+          });
         } else {
           dispatch({
             type: TRADE_SET_STATISTIC,

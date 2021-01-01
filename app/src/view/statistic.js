@@ -5,21 +5,22 @@ import { layoutHorizontal } from "../styles/layout";
 
 import StatisticInputs from "../components/statisticInputs";
 import StatisticTable from "../components/statisticTable";
-
-import Modal from "../components/modal";
+import ErrorMessage from "../components/errorMessage";
 
 const Container = styled.div`
   ${layoutHorizontal}
   height: 97%;
 `;
 
-function StatisticView(props) {
+function StatisticView() {
   return (
     <>
       <Container>
         <StatisticInputs />
         <StatisticTable />
       </Container>
+
+      <ErrorMessage />
     </>
   );
 }
