@@ -113,6 +113,35 @@ function ChartInputs(props) {
     }
   }
 
+  function lastDateOfMonth(month) {
+    switch (month) {
+      case 1:
+        return 31;
+      case 2:
+        return 28;
+      case 3:
+        return 31;
+      case 4:
+        return 30;
+      case 5:
+        return 31;
+      case 6:
+        return 30;
+      case 7:
+        return 31;
+      case 8:
+        return 31;
+      case 9:
+        return 30;
+      case 10:
+        return 31;
+      case 11:
+        return 30;
+      case 12:
+        return 31;
+    }
+  }
+
   function keydownHandler(e) {
     if (e === null) {
       return;
@@ -172,13 +201,26 @@ function ChartInputs(props) {
       case 37:
         // left
 
-        if (e.shiftKey || e.ctrlKey) {
+        if (e.shiftKey || e.ctrlKey || e.altKey) {
           let date;
           if (e.shiftKey) {
             date = `${
               parseInt(inputs.date.substring(0, 4)) - 1
             }${inputs.date.substring(4)}`;
           } else if (e.ctrlKey) {
+            let y = parseInt(inputs.date.substring(0, 4));
+            let m = parseInt(inputs.date.substring(4, 6));
+
+            m -= 1;
+            if (m < 1) {
+              m = 12;
+              y -= 1;
+            }
+
+            date = `${y}${m.toString().padStart(2, "0")}${lastDateOfMonth(m)
+              .toString()
+              .padStart(2, "0")}`;
+          } else if (e.altKey) {
             date = `${parseInt(inputs.date.substring(0, 4)) - 1}1231`;
           }
 
@@ -196,13 +238,26 @@ function ChartInputs(props) {
       case 39:
         // right
 
-        if (e.shiftKey || e.ctrlKey) {
+        if (e.shiftKey || e.ctrlKey || e.altKey) {
           let date;
           if (e.shiftKey) {
             date = `${
               parseInt(inputs.date.substring(0, 4)) + 1
             }${inputs.date.substring(4)}`;
           } else if (e.ctrlKey) {
+            let y = parseInt(inputs.date.substring(0, 4));
+            let m = parseInt(inputs.date.substring(4, 6));
+
+            m += 1;
+            if (m > 12) {
+              m = 1;
+              y += 1;
+            }
+
+            date = `${y}${m.toString().padStart(2, "0")}${lastDateOfMonth(m)
+              .toString()
+              .padStart(2, "0")}`;
+          } else if (e.altKey) {
             date = `${parseInt(inputs.date.substring(0, 4))}1231`;
           }
 
