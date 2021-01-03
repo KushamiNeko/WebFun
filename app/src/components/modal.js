@@ -19,8 +19,6 @@ const ModalBackground = styled.div`
 `;
 
 const Content = styled.div`
-  ${layoutHorizontal}
-  ${layoutAroundJustified}
 
   background-color: var(--paper-indigo-400);
   border-radius: 1.5em;
@@ -28,6 +26,9 @@ const Content = styled.div`
   padding: 1em;
   height: min-content;
 `;
+
+  //${layoutHorizontal}
+  //${layoutAroundJustified}
 
 function Modal(props) {
   return (

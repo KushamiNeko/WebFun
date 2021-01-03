@@ -1,20 +1,20 @@
-import { ERROR_SHOW_MESSAGE, ERROR_CLOSE_PANEL } from "../actions/errorActions";
+import { INFO_SHOW_MESSAGE, INFO_CLOSE_PANEL } from "../actions/infoActions";
 
 const initialState = {
   showPanel: false,
   message: "",
 };
 
-export default function errorReducer(state = initialState, action) {
+export default function infoReducer(state = initialState, action) {
   switch (action.type) {
-    case ERROR_SHOW_MESSAGE:
+    case INFO_SHOW_MESSAGE:
       return {
         ...state,
         showPanel: true,
         message: action.payload.message,
       };
 
-    case ERROR_CLOSE_PANEL:
+    case INFO_CLOSE_PANEL:
       return {
         ...state,
         showPanel: false,

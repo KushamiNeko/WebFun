@@ -6,21 +6,9 @@ import { noselect } from "../styles/common";
 import { fontBody1 } from "../styles/typography";
 
 import Title from "./inputs/title";
+import Separator from "./inputs/separator";
 
 const Container = styled.div``;
-
-const Separator = styled.span`
-  display: block;
-
-  height: 1px;
-  width: 97%;
-
-  margin: 3px auto 3px auto;
-
-  color: white;
-  background-color: white;
-  opacity: var(--dark-disabled-opacity);
-`;
 
 const Table = styled.table.attrs((props) => ({
   cellPadding: "0",
@@ -60,7 +48,7 @@ function StatisticTable(props) {
         {` ~ `}
         {props.trade.statistic["statistic_end"]}
       </Title>
-      <Separator />
+      <Separator width="97%" />
       <Table>
         <thead>
           <tr>

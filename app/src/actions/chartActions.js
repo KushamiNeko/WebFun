@@ -1,4 +1,5 @@
-import { ERROR_SHOW_MESSAGE } from "./errorActions";
+import { INFO_SHOW_MESSAGE } from "./infoActions";
+//import { TRADE_SET_NOTE } from "./tradeActions";
 
 export const CHART_START_WORKING = "chart_start_working";
 export const CHART_FINISH_WORKING = "chart_finish_working";
@@ -59,7 +60,8 @@ export function chartInspectRequest(
   x = null,
   y = null,
   ax = null,
-  ay = null
+  ay = null,
+  showNote = false
 ) {
   return function (dispatch, getState) {
     const url = chartURL(getState().chart, {
@@ -69,14 +71,17 @@ export function chartInspectRequest(
       ay,
     });
 
-    if (getState().chart.function === "inspect") {
+    const chart = getState().chart;
+    //const trade = getState().trade;
+
+    if (chart.function === "inspect") {
       fetch(url)
         .then((res) => res.json())
         .then((data) => {
           if (Object.keys(data).includes("error")) {
             console.error(`${data["error"]}`);
             dispatch({
-              type: ERROR_SHOW_MESSAGE,
+              type: INFO_SHOW_MESSAGE,
               payload: {
                 message: data["error"],
               },
@@ -86,19 +91,43 @@ export function chartInspectRequest(
 
           if (data["inspect"]) {
             callback(data["inspect"]);
-
-            //dispatch({
-            //type: INSPECT_SET_INFO,
-            //payload: {
-            //info: data["inspect"],
-            //},
-            //});
           }
+
+          if (showNote) {
+            if (data["note"]) {
+              dispatch({
+                type: INFO_SHOW_MESSAGE,
+                payload: {
+                  message: data["note"],
+                },
+              });
+            }
+          }
+
+          // if (data["note"]) {
+          //   if (data["note"] !== trade.note) {
+          //     dispatch({
+          //       type: TRADE_SET_NOTE,
+          //       payload: {
+          //         note: data["note"],
+          //       },
+          //     });
+          //   }
+          // } else {
+          //   if (trade.note) {
+          //     dispatch({
+          //       type: TRADE_SET_NOTE,
+          //       payload: {
+          //         note: "",
+          //       },
+          //     });
+          //   }
+          // }
         })
         .catch((error) => {
           console.error(error);
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: error,
             },
@@ -135,7 +164,7 @@ export function chartImageRequest() {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },
@@ -170,7 +199,7 @@ export function chartImageRequest() {
       .catch((error) => {
         console.error(error);
         dispatch({
-          type: ERROR_SHOW_MESSAGE,
+          type: INFO_SHOW_MESSAGE,
           payload: {
             message: error,
           },

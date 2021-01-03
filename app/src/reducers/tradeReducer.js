@@ -6,6 +6,7 @@ import {
   TRADE_SET_STATISTIC,
   TRADE_SET_STOP_ORDERS,
   TRADE_SET_STATISTIC_RANGE,
+  TRADE_SET_NOTE,
 } from "../actions/tradeActions";
 
 const initialState = {
@@ -20,6 +21,8 @@ const initialState = {
 
   startDate: "",
   endDate: "",
+
+  //note: "",
 };
 
 export default function tradeReducer(state = initialState, action) {
@@ -67,6 +70,11 @@ export default function tradeReducer(state = initialState, action) {
         endDate: action.payload.endDate,
       };
 
+    case TRADE_SET_NOTE:
+      return {
+        ...state,
+        note: action.payload.note,
+      };
 
     default:
       return state;

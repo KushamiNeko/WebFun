@@ -5,7 +5,7 @@ import { layoutHorizontal } from "../styles/layout";
 
 import StatisticInputs from "../components/statisticInputs";
 import StatisticTable from "../components/statisticTable";
-import ErrorMessage from "../components/errorMessage";
+import InfoMessage from "../components/infoMessage";
 
 const Container = styled.div`
   ${layoutHorizontal}
@@ -20,7 +20,7 @@ function StatisticView() {
         <StatisticTable />
       </Container>
 
-      <ErrorMessage />
+      <InfoMessage />
     </>
   );
 }

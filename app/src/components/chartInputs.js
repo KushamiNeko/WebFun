@@ -139,6 +139,8 @@ function ChartInputs(props) {
         return 30;
       case 12:
         return 31;
+      default:
+        throw new Error(`invalid month: ${month}`);
     }
   }
 
@@ -151,7 +153,7 @@ function ChartInputs(props) {
       return;
     }
 
-    if (props.error.showPanel) {
+    if (props.info.showPanel) {
       return;
     }
 
@@ -483,7 +485,7 @@ const mapStatetoProps = (state) => ({
   symbols: state.symbols,
   chart: state.chart,
   trade: state.trade,
-  error: state.error,
+  info: state.info,
 });
 
 export default connect(mapStatetoProps, {

@@ -1,4 +1,4 @@
-import { ERROR_SHOW_MESSAGE } from "./errorActions";
+import { INFO_SHOW_MESSAGE } from "./infoActions";
 
 import { CHART_REFRESH } from "./chartActions";
 
@@ -11,6 +11,8 @@ export const TRADE_SET_STOP_ORDERS = "trade_set_stop_orders";
 export const TRADE_SET_STATISTIC = "trade_set_statistic";
 
 export const TRADE_SET_STATISTIC_RANGE = "trade_set_statistic_range";
+
+export const TRADE_SET_NOTE = "trade_set_note";
 
 function tradeURL(gate) {
   // const origin = "http://127.0.0.1:5000";
@@ -71,7 +73,7 @@ export function tradeNewMarketOrder(order) {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },
@@ -126,7 +128,7 @@ export function tradeNewStopOrder(order) {
         if (Object.keys(data).includes("error")) {
           console.error(`${data["error"]}`);
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },
@@ -183,7 +185,7 @@ export function tradeDeleteStopOrder(index) {
           console.error(`${data["error"]}`);
 
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },
@@ -229,7 +231,7 @@ export function tradeReadAllStopOrders() {
           console.error(`${data["error"]}`);
 
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },
@@ -271,7 +273,7 @@ export function tradeReadAllBooks() {
           console.error(`${data["error"]}`);
 
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },
@@ -321,7 +323,7 @@ export function tradeReadStatistic(titles) {
           console.error(`${data["error"]}`);
 
           dispatch({
-            type: ERROR_SHOW_MESSAGE,
+            type: INFO_SHOW_MESSAGE,
             payload: {
               message: data["error"],
             },

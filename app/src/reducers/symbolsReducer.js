@@ -112,6 +112,7 @@ const initialState = {
     "LQD",
     "MBB",
     "SHY",
+    "IEI",
     "IEF",
     "IYR",
     "REET",
@@ -119,10 +120,14 @@ const initialState = {
   ],
   Commodities: [
     "GC",
+    "SI",
     // "GVZ",
     "CL",
+    "NG",
     // "OVX",
     "ZS",
+    "ZC",
+    "ZW",
   ],
 };
 

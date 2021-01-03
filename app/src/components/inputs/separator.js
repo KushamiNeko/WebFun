@@ -4,7 +4,7 @@ const Separator = styled.span`
   display: block;
 
   height: 1px;
-  width: 85%;
+  width: ${(props) => (props.width ? props.width : "85%")};
 
   margin: 3px auto 3px auto;
 

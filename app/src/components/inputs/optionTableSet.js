@@ -19,7 +19,7 @@ const Container = styled.div`
 const Label = styled.span`
   ${fontBody1}
   ${horizontalMargin}
-color: white;
+  color: white;
   margin-bottom: 0.1em;
 `;
 

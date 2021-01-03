@@ -73,6 +73,11 @@ function ChartCanvas(props) {
 
   const imageRef = useRef(null);
 
+  const inspectCursor = useRef({
+    x: 0,
+    y: 0,
+  });
+
   const drawCover = useRef({
     left: false,
     right: false,
@@ -173,6 +178,9 @@ function ChartCanvas(props) {
       ),
       0
     );
+
+    inspectCursor.current.x = x;
+    inspectCursor.current.y = y;
 
     if (drawAnchor.current.active) {
       const ax = Math.max(
@@ -337,6 +345,30 @@ function ChartCanvas(props) {
     }
   }
 
+  function keydownHandler(e) {
+    if (props.info.showPanel) {
+      return;
+    }
+
+    if (e.which === 78) {
+      props.chartInspectRequest(
+        (data) => {
+          infoRef.current.innerHTML = data;
+        },
+        inspectCursor.current.x,
+        inspectCursor.current.y,
+        null,
+        null,
+        true
+      );
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", keydownHandler);
+    return () => window.removeEventListener("keydown", keydownHandler);
+  });
+
   useEffect(() => {
     const imgLoaded = () => {
       initCanvasSize();
@@ -395,6 +427,7 @@ function ChartCanvas(props) {
 const mapStatetoProps = (state) => ({
   symbols: state.symbols,
   chart: state.chart,
+  info: state.info,
 });
 
 export default connect(mapStatetoProps, {
