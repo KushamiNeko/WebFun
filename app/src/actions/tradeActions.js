@@ -28,7 +28,9 @@ function tradeURL(gate) {
 }
 
 function updateOrderBook(order) {
-  order["book"] = `${order["symbol"].toUpperCase()}${order["book"]}`;
+  order["book"] = `${order["symbol"].toUpperCase()}@${order[
+    "book"
+  ].toUpperCase()}`;
   return order;
 }
 

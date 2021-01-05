@@ -29,9 +29,7 @@ function chartURL(state, anchors = null) {
 
   url = `${url}?timestamp=${state.timestamp}`;
   url = `${url}&symbol=${state.symbol}&frequency=${state.frequency}&function=${state.function}&date=${state.date}`;
-  url = `${url}&book=${state.symbol.toUpperCase()}${
-    state.book
-  }&records=${state.showRecords.toString()}`;
+  url = `${url}&book=${state.symbol.toUpperCase()}@${state.book.toUpperCase()}&records=${state.showRecords.toString()}`;
 
   url = `${url}&range=${state.range}`;
 
