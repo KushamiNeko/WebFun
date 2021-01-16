@@ -16,9 +16,9 @@ const Container = styled.div`
   min-width: 212px;
 `;
 
-const rangePresetDaily = ["3M", "6M", "9M", "1Y"];
-const rangePresetWeekly = ["3Y", "4Y", "5Y"];
-const rangePresetMonthly = ["15Y", "18Y", "20Y"];
+const rangePresetDaily = ["3M", "4M", "6M", "9M", "1Y"];
+const rangePresetWeekly = ["2Y", "3Y", "4Y", "5Y"];
+const rangePresetMonthly = ["12Y", "15Y", "18Y", "20Y"];
 
 function ChartRange(props) {
   const [state, setState] = useState({

@@ -27,7 +27,7 @@ const initialState = {
   range: "",
 
   book: "",
-  showRecords: false,
+  showRecords: true,
 
   parameters: {
     Preset: "KushamiNeko",
@@ -140,6 +140,7 @@ export default function chartReducer(state = initialState, action) {
       return {
         ...state,
         image: action.payload.image,
+        date: action.payload.quote.date,
         range: action.payload.range,
         quote: action.payload.quote,
         isWorking: false,

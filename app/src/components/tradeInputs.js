@@ -44,6 +44,20 @@ function TradeInputs(props) {
     operation: false,
   });
 
+  const leverageInput = useRef(null);
+
+  useEffect(() => {
+    if (
+      !focused.current.book &&
+      !focused.current.symbol &&
+      !focused.current.date &&
+      !focused.current.price &&
+      !focused.current.operation
+    ) {
+      leverageInput.current.focus();
+    }
+  });
+
   useEffect(() => {
     if (props.chart.quote.date && props.chart.quote.close) {
       setInputs({
@@ -135,6 +149,7 @@ function TradeInputs(props) {
       />
 
       <LabelInput
+        ref={leverageInput}
         label="Leverage"
         regex="^[0-9.]+$"
         value={inputs.leverage}
@@ -153,6 +168,12 @@ function TradeInputs(props) {
       />
 
       <Button
+        onFocus={() => {
+          focused.current.operation = true;
+        }}
+        onBlur={() => {
+          focused.current.operation = false;
+        }}
         onClick={() => {
           if (inputs.operation === "+") {
             setInputs({

@@ -170,6 +170,18 @@ function ChartInputs(props) {
 
     let index;
     switch (e.which) {
+      case 188:
+        // <
+
+        changeSet(-1);
+        break;
+
+      case 190:
+        // >
+
+        changeSet(1);
+        break;
+
       case 38:
         // up
 

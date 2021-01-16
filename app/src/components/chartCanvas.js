@@ -399,14 +399,14 @@ function ChartCanvas(props) {
     props.chartImageRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    props.chart.function,
-    props.chart.symbol,
-    props.chart.date,
-    props.chart.frequency,
-    props.chart.range,
-    props.chart.book,
-    props.chart.showRecords,
-    props.chart.parameters,
+    //props.chart.function,
+    //props.chart.symbol,
+    //props.chart.date,
+    //props.chart.frequency,
+    //props.chart.range,
+    //props.chart.book,
+    //props.chart.showRecords,
+    //props.chart.parameters,
     props.chart.timestamp,
   ]);
 

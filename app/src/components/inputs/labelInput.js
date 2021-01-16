@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { fontBody1 } from "../../styles/typography";
@@ -49,7 +49,8 @@ const Input = styled.input.attrs((props) => ({
   }
 `;
 
-function LabelInput(props) {
+//function LabelInput(props) {
+const LabelInput = React.forwardRef((props, ref) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -82,6 +83,7 @@ function LabelInput(props) {
     <Container>
       <Label>{props.label}</Label>
       <Input
+        ref={ref}
         value={props.value}
         onFocus={props.onFocus}
         onBlur={props.onBlur}
@@ -96,6 +98,6 @@ function LabelInput(props) {
       />
     </Container>
   );
-}
+});
 
 export default LabelInput;
