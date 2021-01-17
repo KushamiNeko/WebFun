@@ -217,7 +217,24 @@ function ChartInputs(props) {
 
         if (e.shiftKey || e.ctrlKey || e.altKey) {
           let date;
-          if (e.shiftKey) {
+          if (e.shiftKey && e.ctrlKey) {
+            const inputsDate = new Date(
+              parseInt(inputs.date.substring(0, 4)),
+              parseInt(inputs.date.substring(4, 6)) - 1,
+              parseInt(inputs.date.substring(6, 8))
+            );
+            if (inputsDate.getDay() === 1) {
+              inputsDate.setDate(inputsDate.getDate() - 3);
+            } else {
+              inputsDate.setDate(inputsDate.getDate() - 1);
+            }
+            date = `${inputsDate.getFullYear()}${(inputsDate.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}${inputsDate
+              .getDate()
+              .toString()
+              .padStart(2, "0")}`;
+          } else if (e.shiftKey) {
             date = `${
               parseInt(inputs.date.substring(0, 4)) - 1
             }${inputs.date.substring(4)}`;
@@ -235,7 +252,7 @@ function ChartInputs(props) {
               .toString()
               .padStart(2, "0")}`;
           } else if (e.altKey) {
-            date = `${parseInt(inputs.date.substring(0, 4)) - 1}1231`;
+            //date = `${parseInt(inputs.date.substring(0, 4)) - 1}1231`;
           }
 
           props.chartSetInputs(
@@ -254,7 +271,24 @@ function ChartInputs(props) {
 
         if (e.shiftKey || e.ctrlKey || e.altKey) {
           let date;
-          if (e.shiftKey) {
+          if (e.shiftKey && e.ctrlKey) {
+            const inputsDate = new Date(
+              parseInt(inputs.date.substring(0, 4)),
+              parseInt(inputs.date.substring(4, 6)) - 1,
+              parseInt(inputs.date.substring(6, 8))
+            );
+            if (inputsDate.getDay() === 5) {
+              inputsDate.setDate(inputsDate.getDate() + 3);
+            } else {
+              inputsDate.setDate(inputsDate.getDate() + 1);
+            }
+            date = `${inputsDate.getFullYear()}${(inputsDate.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}${inputsDate
+              .getDate()
+              .toString()
+              .padStart(2, "0")}`;
+          } else if (e.shiftKey) {
             date = `${
               parseInt(inputs.date.substring(0, 4)) + 1
             }${inputs.date.substring(4)}`;
@@ -272,7 +306,7 @@ function ChartInputs(props) {
               .toString()
               .padStart(2, "0")}`;
           } else if (e.altKey) {
-            date = `${parseInt(inputs.date.substring(0, 4))}1231`;
+            //date = `${parseInt(inputs.date.substring(0, 4))}1231`;
           }
 
           const now = new Date();
@@ -298,11 +332,12 @@ function ChartInputs(props) {
 
       case 72:
         // h
-        //setInputs({
-        //...inputs,
-        //freq: "h",
-        //});
-        //props.chartSetFrequency("h");
+
+        setInputs({
+          ...inputs,
+          freq: "h",
+        });
+        props.chartSetFrequency("h");
         break;
 
       case 68:
@@ -362,6 +397,8 @@ function ChartInputs(props) {
           }, 250);
         }
     }
+
+    //e.preventDefault();
   }
 
   useEffect(() => {
