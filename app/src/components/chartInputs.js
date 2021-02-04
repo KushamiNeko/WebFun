@@ -330,6 +330,16 @@ function ChartInputs(props) {
         }
         break;
 
+      case 71:
+        // g
+
+        setInputs({
+          ...inputs,
+          freq: "30m",
+        });
+        props.chartSetFrequency("30m");
+        break;
+
       case 72:
         // h
 
@@ -480,7 +490,7 @@ function ChartInputs(props) {
 
       <LabelInput
         label="Frequency"
-        regex="^[hdwm]{1}$"
+        regex="^(?:[hdwm]{1}|30m)$"
         value={inputs.freq}
         onFocus={() => (focused.current.freq = true)}
         onBlur={() => (focused.current.freq = false)}

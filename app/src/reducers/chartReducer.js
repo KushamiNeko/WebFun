@@ -27,14 +27,16 @@ const initialState = {
   range: "",
 
   book: "",
-  showRecords: true,
+  showRecords: false,
 
   parameters: {
     Preset: "KushamiNeko",
     CandleSticks: "true",
     MovingAverages: "true",
-    MovingAverages100: "true",
-    MovingAverages300: "true",
+    //MovingAverages100: "true",
+    //MovingAverages300: "true",
+    Volume: "true",
+    Studies: "true",
   },
 
   timestamp: 0,
