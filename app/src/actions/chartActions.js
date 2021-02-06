@@ -335,7 +335,7 @@ export function chartSetParameters(parameters) {
     dispatch({
       type: CHART_PARAMETERS_REQUEST,
       payload: {
-        function: "slice",
+        function: "simple",
         parameters: parameters,
       },
     });
