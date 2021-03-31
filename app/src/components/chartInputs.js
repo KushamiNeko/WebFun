@@ -31,18 +31,21 @@ function ChartInputs(props) {
 
   const [inputs, setInputs] = useState({
     date: "",
+    time: "",
     freq: "d",
     book: "01",
   });
 
   const errors = useRef({
     date: false,
+    time: false,
     freq: false,
     book: false,
   });
 
   const focused = useRef({
     date: false,
+    time: false,
     freq: false,
     book: false,
   });
@@ -95,7 +98,12 @@ function ChartInputs(props) {
   }
 
   function makeInputsRequest() {
-    if (errors.current.date || errors.current.freq || errors.current.book) {
+    if (
+      errors.current.date ||
+      errors.current.time ||
+      errors.current.freq ||
+      errors.current.book
+    ) {
       console.error("inputs error");
     } else {
       let date = inputs.date;
@@ -163,7 +171,10 @@ function ChartInputs(props) {
 
     if (
       e.which !== 13 &&
-      (focused.current.date || focused.current.freq || focused.current.book)
+      (focused.current.date ||
+        focused.current.time ||
+        focused.current.freq ||
+        focused.current.book)
     ) {
       return;
     }
@@ -330,6 +341,16 @@ function ChartInputs(props) {
         }
         break;
 
+      case 70:
+        // f
+
+        setInputs({
+          ...inputs,
+          freq: "15m",
+        });
+        props.chartSetFrequency("15m");
+        break;
+
       case 71:
         // g
 
@@ -345,9 +366,9 @@ function ChartInputs(props) {
 
         setInputs({
           ...inputs,
-          freq: "h",
+          freq: "60m",
         });
-        props.chartSetFrequency("h");
+        props.chartSetFrequency("60m");
         break;
 
       case 68:
@@ -436,6 +457,7 @@ function ChartInputs(props) {
       setInputs({
         ...inputs,
         date: props.chart.quote.date,
+        time: props.chart.quote.time,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -471,7 +493,7 @@ function ChartInputs(props) {
       </Button>
 
       <LabelInput
-        label="Date"
+        label="Date(CT)"
         regex="^(?:[0-9]{8}|[0-9]{4})$"
         value={inputs.date}
         onFocus={() => (focused.current.date = true)}
@@ -489,8 +511,26 @@ function ChartInputs(props) {
       />
 
       <LabelInput
+        label="Time(CT)"
+        regex="^\d{2}:\d{2}$"
+        value={inputs.time}
+        onFocus={() => (focused.current.time = true)}
+        onBlur={() => (focused.current.time = false)}
+        onKeyDown={() => {}}
+        onValueChange={(value) => {
+          setInputs({
+            ...inputs,
+            time: value.trim(),
+          });
+        }}
+        onError={(err) => {
+          errors.current.time = err;
+        }}
+      />
+
+      <LabelInput
         label="Frequency"
-        regex="^(?:[hdwm]{1}|30m)$"
+        regex="^(?:[dwm]{1}|15m|30m|60m)$"
         value={inputs.freq}
         onFocus={() => (focused.current.freq = true)}
         onBlur={() => (focused.current.freq = false)}

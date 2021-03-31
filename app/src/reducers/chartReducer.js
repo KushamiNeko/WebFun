@@ -23,6 +23,7 @@ const initialState = {
   function: "",
   symbol: "",
   date: "",
+  time: "",
   frequency: "",
   range: "",
 
@@ -33,6 +34,7 @@ const initialState = {
     Preset: "KushamiNeko",
     CandleSticks: "true",
     MovingAverages: "true",
+    IntradayAdjustment: "true",
     //MovingAverages100: "true",
     //MovingAverages300: "true",
     Volume: "true",
@@ -143,6 +145,7 @@ export default function chartReducer(state = initialState, action) {
         ...state,
         image: action.payload.image,
         date: action.payload.quote.date,
+        time: action.payload.quote.time,
         range: action.payload.range,
         quote: action.payload.quote,
         isWorking: false,

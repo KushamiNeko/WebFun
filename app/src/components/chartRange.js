@@ -16,10 +16,21 @@ const Container = styled.div`
   min-width: 212px;
 `;
 
-const rangePresetHourly = ["4D", "5D", "6D", "8D", "12D", "16D"];
-const rangePresetDaily = ["3M", "4M", "6M", "9M", "1Y"];
+const rangePresetHourly = [
+  "1D",
+  "2D",
+  "3D",
+  "4D",
+  "5D",
+  "6D",
+  "7D",
+  "8D",
+  "12D",
+  "16D",
+];
+const rangePresetDaily = ["3M", "4M", "5M", "6M", "7M", "9M", "1Y"];
 const rangePresetWeekly = ["2Y", "3Y", "4Y", "5Y"];
-const rangePresetMonthly = ["12Y", "15Y", "18Y", "20Y"];
+const rangePresetMonthly = ["10Y", "11Y", "12Y", "15Y", "18Y", "20Y"];
 
 function ChartRange(props) {
   const [state, setState] = useState({
@@ -42,7 +53,10 @@ function ChartRange(props) {
         ...state,
         rangeOptions: rangePresetMonthly,
       });
-    } else if (props.chart.frequency === "h" || props.chart.frequency === "30m") {
+    } else if (
+      props.chart.frequency === "h" ||
+      props.chart.frequency === "30m"
+    ) {
       setState({
         ...state,
         rangeOptions: rangePresetHourly,
