@@ -19,7 +19,7 @@ const Container = styled.div`
 `;
 
 const defaultParameters = {
-  0: [0, 1, 5, 6, 8],
+  0: [0, 1, 2, 3, 6, 7, 9],
   1: [1, 4, 6, 7, 8],
 };
 

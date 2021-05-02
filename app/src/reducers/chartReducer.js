@@ -34,6 +34,8 @@ const initialState = {
     Preset: "KushamiNeko",
     CandleSticks: "true",
     MovingAverages: "true",
+    EXMovingAverages: "true",
+    MovingAverages10: "true",
     IntradayAdjustment: "true",
     //MovingAverages100: "true",
     //MovingAverages300: "true",

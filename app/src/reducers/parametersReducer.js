@@ -2,7 +2,9 @@ const initialState = {
   KushamiNeko: [
     "CandleSticks",
     "Moving Averages",
+    "EX Moving Averages",
     "Moving Averages 10",
+    // "EX Moving Averages 10",
     //"Moving Averages 60",
     "Moving Averages 100",
     "Moving Averages 300",
@@ -14,6 +16,7 @@ const initialState = {
     "Intraday Adjustment",
     "Volatility Summary",
     "Interest Rates",
+    "EX Envelope 10",
     "Bollinger Bands",
     "Trading Level",
     //"EW Relative Strength",
