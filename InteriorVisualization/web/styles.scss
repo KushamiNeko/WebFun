@@ -1,0 +1,67 @@
+html,
+body {
+  font-family: 'Ubuntu', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+#map_container {
+  position: absolute;
+  pointer-events: none;
+  transition: width 0.15s, height 0.15s, left 0.15s, top 0.15s, opacity 0.15s;
+  opacity: 0;
+}
+
+@mixin button {
+  color: antiquewhite;
+  position: absolute;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.5);
+  pointer-events: visible;
+  transition: opacity 0.15s;
+}
+
+@mixin large_button {
+  @include button;
+  height: 7.5%;
+  width: 10%;
+}
+
+.room_button {
+  @include large_button;
+  bottom: 3%;
+  left: 50%;
+  opacity: 0;
+}
+
+.map_toggle {
+  @include large_button;
+  bottom: 3%;
+  left: 3%;
+}
+
+.map_button {
+  @include button;
+  opacity: 0;
+  height: 5%;
+}
+
+.map_arrow {
+  position: absolute;
+  opacity: 0.5;
+  pointer-events: none;
+  height: 10%;
+  width: 10%;
+  z-index: 2;
+  transition: left 0.15s, bottom 0.15s;
+}
+
+.map {
+  opacity: 0.9;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+}
