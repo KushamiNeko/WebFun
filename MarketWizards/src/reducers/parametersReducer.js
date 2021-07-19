@@ -17,6 +17,7 @@ const initialState = {
     "Volatility Summary",
     "Interest Rates",
     "EX Envelope 10",
+    "Keltner Channels",
     "Bollinger Bands",
     "Trading Level",
     //"EW Relative Strength",

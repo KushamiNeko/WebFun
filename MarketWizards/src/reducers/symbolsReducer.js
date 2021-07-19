@@ -1,4 +1,14 @@
 const initialState = {
+  Focus: [
+    "ZN",
+    "ZF",
+    "ZB",
+    "ZT",
+    "ES",
+    "NQ",
+    "VIX",
+    "VXN",
+  ],
   Bonds: [
     //
     "ZN",

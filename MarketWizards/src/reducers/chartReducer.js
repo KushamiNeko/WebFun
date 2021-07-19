@@ -28,7 +28,7 @@ const initialState = {
   range: "",
 
   book: "",
-  showRecords: false,
+  showRecords: true,
 
   parameters: {
     Preset: "KushamiNeko",
